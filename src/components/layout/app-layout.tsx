@@ -82,7 +82,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <Home className="size-5" />
             </Button>
             <h1 className="font-headline text-xl font-semibold text-sidebar-foreground">
-              PropTrack Hub
+              Avanti Realty
             </h1>
           </Link>
         </SidebarHeader>

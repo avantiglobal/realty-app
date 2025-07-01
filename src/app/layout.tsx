@@ -5,8 +5,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { UserProvider } from '@/contexts/user-context';
 
 export const metadata: Metadata = {
-  title: 'PropTrack Hub',
-  description: 'A complete platform for property management.',
+  title: 'Avanti Realty',
+  description: 'Your partner in property management.',
 };
 
 export default function RootLayout({
