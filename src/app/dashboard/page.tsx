@@ -109,7 +109,7 @@ export default function DashboardPage() {
               <CardDescription>Your 3 most recent payments.</CardDescription>
             </div>
             <Link href="/dashboard/payments" className="hidden lg:block">
-              <Button variant="primary" size="sm">
+              <Button>
                 <PlusCircle className="mr-2 h-4 w-4" />View Full History
               </Button>
             </Link>
@@ -156,7 +156,7 @@ export default function DashboardPage() {
           </CardContent>
           <CardFooter className="lg:hidden">
             <Link href="/dashboard/payments" className="w-full">
-              <Button variant="primary" className="w-full">
+              <Button className="w-full">
                 <PlusCircle className="mr-2 h-4 w-4" />View Full History
               </Button>
             </Link>
