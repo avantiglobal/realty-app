@@ -45,44 +45,45 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <Card>
-        <CardContent className="p-4 flex flex-col sm:flex-row gap-4 items-center">
-            <div className="w-full sm:w-1/3 md:w-1/4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div className="flex flex-col gap-6">
+          <Card>
+            <CardContent className="p-4 flex flex-row gap-4 items-center">
                 <Image
                     alt="Property Image"
-                    className="aspect-video sm:aspect-square w-full object-cover rounded-md"
-                    height="150"
-                    src="https://placehold.co/150x150.png"
-                    width="150"
+                    className="aspect-square w-24 h-24 object-cover rounded-md"
+                    height="100"
+                    src="https://placehold.co/100x100.png"
+                    width="100"
                     data-ai-hint="house apartment"
                 />
-            </div>
-            <div className="w-full sm:w-2/3 md:w-3/4">
-                <h3 className="text-xl font-semibold">1546 Moose Ridge Ln</h3>
-                <p className="text-muted-foreground">Westfield, IN, 46074</p>
-            </div>
-        </CardContent>
-      </Card>
+                <div className="flex-1">
+                    <h3 className="text-lg font-semibold">1546 Moose Ridge Ln</h3>
+                    <p className="text-muted-foreground text-sm">Westfield, IN, 46074</p>
+                </div>
+            </CardContent>
+          </Card>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Current Balance
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-4xl font-bold">$2,650</p>
-            {nextPaymentDate ? (
-               <p className="text-muted-foreground mt-1">
-                Due on {format(nextPaymentDate, "MMMM d, yyyy")}
-               </p>
-            ) : (
-                <div className="h-6 w-40 bg-muted rounded animate-pulse mt-1" />
-            )}
-          </CardContent>
-        </Card>
-        <Card className="flex flex-col">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                Current Balance
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-4xl font-bold">$2,650</p>
+              {nextPaymentDate ? (
+                 <p className="text-muted-foreground mt-1">
+                  Due on {format(nextPaymentDate, "MMMM d, yyyy")}
+                 </p>
+              ) : (
+                  <div className="h-6 w-40 bg-muted rounded animate-pulse mt-1" />
+              )}
+            </CardContent>
+          </Card>
+        </div>
+        
+        <Card className="flex flex-col h-full">
           <CardHeader>
             <CardTitle>Payment History</CardTitle>
             <CardDescription>A summary of your recent payments.</CardDescription>
