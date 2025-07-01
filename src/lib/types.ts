@@ -44,3 +44,11 @@ export type Communication = {
     timestamp: Date;
   }[];
 };
+
+export type Notification = {
+  id: string;
+  title: string;
+  description: string;
+  read: boolean;
+  createdAt: Date;
+};

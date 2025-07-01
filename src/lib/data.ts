@@ -1,4 +1,4 @@
-import { User, Property, Payment, MaintenanceRequest, Communication } from './types';
+import { User, Property, Payment, MaintenanceRequest, Communication, Notification } from './types';
 
 export const users: User[] = [
   {
@@ -132,4 +132,49 @@ export const communications: Communication[] = [
             { id: 'msg3', userId: '1', text: 'The maintenance request for the HVAC has been received.', timestamp: new Date(new Date().setDate(new Date().getDate() - 2))},
         ]
     }
+];
+
+export const notifications: Notification[] = [
+  {
+    id: 'notif1',
+    title: 'New Maintenance Request',
+    description: 'Leaky faucet in the kitchen sink.',
+    read: false,
+    createdAt: new Date(new Date().setDate(new Date().getDate() - 1)),
+  },
+  {
+    id: 'notif2',
+    title: 'Payment Overdue',
+    description: 'Rent for Lakeside Cottage is overdue.',
+    read: false,
+    createdAt: new Date(new Date().setDate(new Date().getDate() - 2)),
+  },
+  {
+    id: 'notif3',
+    title: 'New Message',
+    description: 'From Admin User regarding your property.',
+    read: true,
+    createdAt: new Date(new Date().setDate(new Date().getDate() - 3)),
+  },
+  {
+    id: 'notif4',
+    title: 'Maintenance Completed',
+    description: 'Front door lock has been fixed.',
+    read: true,
+    createdAt: new Date(new Date().setDate(new Date().getDate() - 5)),
+  },
+  {
+    id: 'notif5',
+    title: 'Upcoming Payment',
+    description: 'Rent for Modern Downtown Loft is due soon.',
+    read: true,
+    createdAt: new Date(new Date().setDate(new Date().getDate() - 7)),
+  },
+    {
+    id: 'notif6',
+    title: 'Welcome!',
+    description: 'Welcome to Avanti Realty!',
+    read: true,
+    createdAt: new Date(new Date().setDate(new Date().getDate() - 10)),
+  },
 ];

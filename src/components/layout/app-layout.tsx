@@ -28,6 +28,7 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle"
 import { UserNav } from "@/components/user-nav"
 import { Button } from "@/components/ui/button"
+import { NotificationsNav } from "@/components/notifications-nav"
 
 const menuItems = [
   {
@@ -112,6 +113,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 py-2">
             <SidebarTrigger className="sm:hidden" />
             <div className="ml-auto flex items-center gap-2">
+                <NotificationsNav />
                 <ThemeToggle />
                 <UserNav />
             </div>
