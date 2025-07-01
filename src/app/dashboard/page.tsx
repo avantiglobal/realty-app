@@ -152,13 +152,11 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
                 <Link href="/dashboard/maintenance">
-                    <Button className="w-full mb-6">
+                    <Button className="mb-6">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Submit New Request
                     </Button>
                 </Link>
-                
-                <h4 className="text-sm font-medium mb-4 text-muted-foreground">Request History</h4>
                 
                 {maintenanceRequests.length > 0 ? (
                     <Table>
