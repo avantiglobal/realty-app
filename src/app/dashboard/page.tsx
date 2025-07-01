@@ -2,6 +2,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import {
   Card,
   CardContent,
@@ -43,6 +44,25 @@ export default function DashboardPage() {
           Welcome back, {user.name}! Here's a summary of your account.
         </p>
       </div>
+
+      <Card>
+        <CardContent className="p-4 flex flex-col sm:flex-row gap-4 items-center">
+            <div className="w-full sm:w-1/3 md:w-1/4">
+                <Image
+                    alt="Property Image"
+                    className="aspect-video sm:aspect-square w-full object-cover rounded-md"
+                    height="150"
+                    src="https://placehold.co/150x150.png"
+                    width="150"
+                    data-ai-hint="house apartment"
+                />
+            </div>
+            <div className="w-full sm:w-2/3 md:w-3/4">
+                <h3 className="text-xl font-semibold">1546 Moose Ridge Ln</h3>
+                <p className="text-muted-foreground">Westfield, IN, 46074</p>
+            </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
