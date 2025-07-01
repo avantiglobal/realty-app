@@ -13,10 +13,8 @@ import { communications, properties, users as allUsers } from "@/lib/data"
 import { cn } from "@/lib/utils"
 
 export default function CommunicationsPage() {
-    // With Clerk implemented, user management is now dynamic.
-    // For this demo, we'll hardcode the user ID to keep the chat UI consistent
-    // with the existing mock data. In a real application, you would
-    // fetch communications based on the logged-in user's ID from Clerk.
+    // This is a mock implementation. In a real application, you would
+    // fetch communications based on the logged-in user's ID.
     const currentUserId = "1";
     const activeChat = communications[0];
     const propertyName = properties.find(p => p.id === activeChat.propertyId)?.name;

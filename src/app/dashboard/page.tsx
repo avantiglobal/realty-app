@@ -19,7 +19,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { format, addMonths, startOfMonth } from "date-fns";
-import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Coins } from "lucide-react";
@@ -32,7 +31,6 @@ export default function DashboardPage() {
   const [nextPaymentDate, setNextPaymentDate] = React.useState<Date | null>(null);
   const [recentPayments, setRecentPayments] = React.useState<Payment[]>([]);
   const [maintenanceRequests, setMaintenanceRequests] = React.useState<MaintenanceRequest[]>([]);
-  const { user } = useUser();
 
   React.useEffect(() => {
     // The date and payment data is dynamic, so we load it on the client
@@ -50,7 +48,7 @@ export default function DashboardPage() {
       <div>
         <h1 className="text-3xl font-bold font-headline">Dashboard</h1>
         <p className="text-muted-foreground">
-          Welcome back, {user ? user.fullName : 'Guest'}! Here's a summary of your account.
+          Welcome back! Here's a summary of your account.
         </p>
       </div>
 
@@ -108,7 +106,7 @@ export default function DashboardPage() {
               <CardTitle>Payment History</CardTitle>
               <CardDescription>Your 3 most recent payments.</CardDescription>
             </div>
-            <Link href="/dashboard/payments" className="hidden lg:block">
+            <Link href="/dashboard/payments" className="hidden sm:block">
               <Button>
                 <PlusCircle className="mr-2 h-4 w-4" />View Full History
               </Button>
@@ -144,9 +142,9 @@ export default function DashboardPage() {
               <div className="text-sm text-muted-foreground text-center pt-8">Loading payments...</div>
             )}
           </CardContent>
-          <CardFooter className="lg:hidden">
+          <CardFooter className="sm:hidden">
             <Link href="/dashboard/payments" className="w-full">
-              <Button>
+              <Button className="w-full">
                 <PlusCircle className="mr-2 h-4 w-4" />View Full History
               </Button>
             </Link>

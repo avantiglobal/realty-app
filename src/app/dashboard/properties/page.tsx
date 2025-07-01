@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import { PlusCircle, MoreVertical } from "lucide-react"
-import { useUser } from "@clerk/nextjs"
 import { properties } from "@/lib/data"
 import { Button } from "@/components/ui/button"
 import {
@@ -23,7 +22,6 @@ import {
 import { Badge } from "@/components/ui/badge"
 
 export default function PropertiesPage() {
-  const { user } = useUser()
 
   return (
     <div className="flex flex-col gap-6">
@@ -32,12 +30,10 @@ export default function PropertiesPage() {
             <h1 className="text-3xl font-bold font-headline">Properties</h1>
             <p className="text-muted-foreground">Manage all your properties in one place.</p>
         </div>
-        {user?.publicMetadata?.role === 'Admin' && (
-            <Button>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Property
-            </Button>
-        )}
+        <Button>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Property
+        </Button>
       </div>
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -53,24 +49,22 @@ export default function PropertiesPage() {
                         width="400"
                         data-ai-hint="house apartment"
                     />
-                    {user?.publicMetadata?.role === 'Admin' && (
-                        <div className="absolute top-2 right-2">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                <Button size="icon" variant="secondary" className="w-8 h-8">
-                                    <MoreVertical className="h-4 w-4" />
-                                    <span className="sr-only">More</span>
-                                </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>View Details</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-destructive">Archive</DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    )}
+                    <div className="absolute top-2 right-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                            <Button size="icon" variant="secondary" className="w-8 h-8">
+                                <MoreVertical className="h-4 w-4" />
+                                <span className="sr-only">More</span>
+                            </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-destructive">Archive</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             </CardHeader>
             <CardContent className="p-4">
