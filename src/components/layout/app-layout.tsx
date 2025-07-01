@@ -9,6 +9,7 @@ import {
   Wrench,
   Home,
   CalendarClock,
+  Building2,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -30,6 +31,11 @@ import { Button } from "@/components/ui/button"
 
 const menuItems = [
   {
+    href: "/dashboard/properties",
+    icon: Building2,
+    label: "Properties",
+  },
+  {
     href: "/dashboard/payments",
     icon: Wallet,
     label: "Payment History",
@@ -37,12 +43,12 @@ const menuItems = [
   {
     href: "/dashboard/upcoming-payments",
     icon: CalendarClock,
-    label: "Upcoming payment",
+    label: "Upcoming Payments",
   },
   {
     href: "/dashboard/maintenance",
     icon: Wrench,
-    label: "Maintenance requests",
+    label: "Maintenance Requests",
   },
   {
     href: "/dashboard/communications",
