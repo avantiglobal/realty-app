@@ -69,11 +69,11 @@ export default function DashboardPage() {
                 <div className="flex-1">
                     <h3 className="text-lg font-semibold">
                       1546 Moose Ridge Ln
-                      <span className="block text-sm font-normal text-muted-foreground">
+                      <span className="block">
                         Westfield, IN, 46074
                       </span>
                     </h3>
-                    <p className="text-muted-foreground text-sm mt-1">Aquasha Williams</p>
+                    <p className="text-muted-foreground text-sm mt-2">Tenant Name: Aquasha Williams</p>
                 </div>
             </CardContent>
           </Card>
