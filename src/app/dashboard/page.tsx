@@ -114,49 +114,39 @@ export default function DashboardPage() {
               </Button>
             </Link>
           </CardHeader>
-          <CardContent className="flex-1 space-y-4">
-             {recentPayments.length > 0 ? (
-                recentPayments.map((payment) => (
-                    <div
-                        key={payment.id}
-                        className="flex items-center justify-between"
-                    >
-                        <div>
-                        <p className="font-medium">
-                           Rent Payment
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            {format(payment.dueDate, "P")}
-                        </p>
-                        </div>
-                        <div className="text-right">
-                        <p className="font-semibold">${payment.amount.toFixed(2)}</p>
-                        <Badge
-                            variant={
-                                payment.status === 'Overdue'
-                                ? 'destructive'
-                                : 'default'
-                            }
-                            className={cn(
-                            "capitalize text-xs",
-                            payment.status === 'Upcoming' &&
-                                "bg-accent text-accent-foreground",
-                            payment.status === 'Paid' &&
-                                "bg-green-600 text-white border-transparent hover:bg-green-700"
-                            )}
-                        >
-                            {payment.status}
-                        </Badge>
-                        </div>
+          <CardContent className="flex-1">
+            {recentPayments.length > 0 ? (
+              <div className="divide-y divide-border">
+                {recentPayments.map((payment) => (
+                  <div key={payment.id} className="flex items-start justify-between py-4 first:pt-0 last:pb-0">
+                    <div>
+                      <p className="font-medium">Rent Payment</p>
+                      <p className="text-sm text-muted-foreground">
+                        {format(payment.dueDate, "P")}
+                      </p>
                     </div>
-                ))
+                    <div className="text-right">
+                      <p className="text-lg font-semibold">${payment.amount.toFixed(2)}</p>
+                      <p
+                        className={cn("text-sm font-medium capitalize", {
+                          "text-green-600 dark:text-green-500": payment.status === 'Paid',
+                          "text-destructive": payment.status === 'Overdue',
+                          "text-primary": payment.status === 'Upcoming',
+                        })}
+                      >
+                        {payment.status}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
-                <div className="text-sm text-muted-foreground text-center pt-8">Loading payments...</div>
+              <div className="text-sm text-muted-foreground text-center pt-8">Loading payments...</div>
             )}
           </CardContent>
           <CardFooter className="lg:hidden">
             <Link href="/dashboard/payments" className="w-full">
-              <Button className="w-full">
+              <Button>
                 <PlusCircle className="mr-2 h-4 w-4" />View Full History
               </Button>
             </Link>
