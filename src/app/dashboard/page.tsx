@@ -90,8 +90,63 @@ export default function DashboardPage() {
               )}
             </CardContent>
           </Card>
-
-           <Card>
+        </div>
+        
+        <Card className="flex flex-col h-full">
+          <CardHeader>
+            <CardTitle>Payment History</CardTitle>
+            <CardDescription>Your 3 most recent payments.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-1 space-y-4">
+             {recentPayments.length > 0 ? (
+                recentPayments.map((payment) => (
+                    <div
+                        key={payment.id}
+                        className="flex items-center justify-between"
+                    >
+                        <div>
+                        <p className="font-medium">
+                           Rent Payment
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                            {format(payment.dueDate, "P")}
+                        </p>
+                        </div>
+                        <div className="text-right">
+                        <p className="font-semibold">${payment.amount.toFixed(2)}</p>
+                        <Badge
+                            variant={
+                                payment.status === 'Overdue'
+                                ? 'destructive'
+                                : 'default'
+                            }
+                            className={cn(
+                            "capitalize text-xs",
+                            payment.status === 'Upcoming' &&
+                                "bg-accent text-accent-foreground",
+                            payment.status === 'Paid' &&
+                                "bg-green-600 text-white border-transparent hover:bg-green-700"
+                            )}
+                        >
+                            {payment.status}
+                        </Badge>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <div className="text-sm text-muted-foreground text-center pt-8">Loading payments...</div>
+            )}
+          </CardContent>
+          <CardFooter>
+            <Link href="/dashboard/payments" className="w-full">
+              <Button className="w-full">
+                View Full History <ArrowRight className="ml-2" />
+              </Button>
+            </Link>
+          </CardFooter>
+        </Card>
+        
+        <Card className="md:col-span-2">
             <CardHeader>
                 <CardTitle>Maintenance Requests</CardTitle>
             </CardHeader>
@@ -143,61 +198,6 @@ export default function DashboardPage() {
                     </div>
                 )}
             </CardContent>
-          </Card>
-        </div>
-        
-        <Card className="flex flex-col h-full">
-          <CardHeader>
-            <CardTitle>Payment History</CardTitle>
-            <CardDescription>A summary of your recent payments.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex-1 space-y-4">
-             {recentPayments.length > 0 ? (
-                recentPayments.map((payment) => (
-                    <div
-                        key={payment.id}
-                        className="flex items-center justify-between"
-                    >
-                        <div>
-                        <p className="font-medium">
-                           Rent Payment
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            {format(payment.dueDate, "P")}
-                        </p>
-                        </div>
-                        <div className="text-right">
-                        <p className="font-semibold">${payment.amount.toFixed(2)}</p>
-                        <Badge
-                            variant={
-                                payment.status === 'Overdue'
-                                ? 'destructive'
-                                : 'default'
-                            }
-                            className={cn(
-                            "capitalize text-xs",
-                            payment.status === 'Upcoming' &&
-                                "bg-accent text-accent-foreground",
-                            payment.status === 'Paid' &&
-                                "bg-green-600 text-white border-transparent hover:bg-green-700"
-                            )}
-                        >
-                            {payment.status}
-                        </Badge>
-                        </div>
-                    </div>
-                ))
-            ) : (
-                <div className="text-sm text-muted-foreground text-center pt-8">Loading payments...</div>
-            )}
-          </CardContent>
-          <CardFooter>
-            <Link href="/dashboard/payments" className="w-full">
-              <Button className="w-full">
-                View Full History <ArrowRight className="ml-2" />
-              </Button>
-            </Link>
-          </CardFooter>
         </Card>
       </div>
     </div>
