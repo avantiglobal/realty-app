@@ -22,7 +22,7 @@ import { format, addMonths, startOfMonth } from "date-fns";
 import { useUser } from "@/contexts/user-context";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, PlusCircle, Coins } from "lucide-react";
+import { PlusCircle, Coins } from "lucide-react";
 import { payments as allPayments, maintenanceRequests as allMaintenanceRequests } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -108,9 +108,9 @@ export default function DashboardPage() {
               <CardTitle>Payment History</CardTitle>
               <CardDescription>Your 3 most recent payments.</CardDescription>
             </div>
-            <Link href="/dashboard/payments" className="hidden md:block">
+            <Link href="/dashboard/payments" className="hidden lg:block">
               <Button variant="primary" size="sm">
-                View Full History <ArrowRight className="ml-2" />
+                <PlusCircle className="mr-2 h-4 w-4" />View Full History
               </Button>
             </Link>
           </CardHeader>
@@ -154,10 +154,10 @@ export default function DashboardPage() {
                 <div className="text-sm text-muted-foreground text-center pt-8">Loading payments...</div>
             )}
           </CardContent>
-          <CardFooter className="md:hidden">
+          <CardFooter className="lg:hidden">
             <Link href="/dashboard/payments" className="w-full">
               <Button variant="primary" className="w-full">
-                View Full History <ArrowRight className="ml-2" />
+                <PlusCircle className="mr-2 h-4 w-4" />View Full History
               </Button>
             </Link>
           </CardFooter>
