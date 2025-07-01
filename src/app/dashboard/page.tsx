@@ -95,8 +95,8 @@ export default function DashboardPage() {
                     <div className="h-6 w-40 bg-muted rounded animate-pulse mt-1" />
                 )}
               </div>
-              <div className="bg-secondary p-3 rounded-full">
-                <Coins className="h-8 w-8 text-muted-foreground" />
+              <div className="bg-card border-2 border-primary p-3 rounded-full">
+                <Coins className="h-8 w-8 text-primary" />
               </div>
             </CardContent>
           </Card>
