@@ -103,9 +103,16 @@ export default function DashboardPage() {
         </div>
         
         <Card className="flex flex-col h-full">
-          <CardHeader>
-            <CardTitle>Payment History</CardTitle>
-            <CardDescription>Your 3 most recent payments.</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Payment History</CardTitle>
+              <CardDescription>Your 3 most recent payments.</CardDescription>
+            </div>
+            <Link href="/dashboard/payments" className="hidden md:block">
+              <Button variant="primary" size="sm">
+                View Full History <ArrowRight className="ml-2" />
+              </Button>
+            </Link>
           </CardHeader>
           <CardContent className="flex-1 space-y-4">
              {recentPayments.length > 0 ? (
@@ -147,9 +154,9 @@ export default function DashboardPage() {
                 <div className="text-sm text-muted-foreground text-center pt-8">Loading payments...</div>
             )}
           </CardContent>
-          <CardFooter className="justify-center">
-            <Link href="/dashboard/payments">
-              <Button variant="secondary-outline">
+          <CardFooter className="md:hidden">
+            <Link href="/dashboard/payments" className="w-full">
+              <Button variant="primary" className="w-full">
                 View Full History <ArrowRight className="ml-2" />
               </Button>
             </Link>
