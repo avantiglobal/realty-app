@@ -57,7 +57,7 @@ export default function DashboardPage() {
             </div>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2">
              <Card>
                 <CardHeader>
                     <CardTitle className="text-lg font-semibold">Current Balance</CardTitle>
@@ -71,28 +71,14 @@ export default function DashboardPage() {
             </Card>
             <Card className="flex flex-col">
                 <CardHeader>
-                    <CardTitle>Upcoming Payments</CardTitle>
-                    <CardDescription>View your upcoming payment and history.</CardDescription>
+                    <CardTitle>Payment History</CardTitle>
+                    <CardDescription>View your complete payment history.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1" />
                 <CardFooter>
-                     <Link href="/dashboard/upcoming-payments" className="w-full">
+                     <Link href="/dashboard/payments" className="w-full">
                         <Button className="w-full">
-                            View Payments <ArrowRight className="ml-2" />
-                        </Button>
-                    </Link>
-                </CardFooter>
-            </Card>
-            <Card className="flex flex-col">
-                <CardHeader>
-                    <CardTitle>Maintenance</CardTitle>
-                    <CardDescription>Submit and track maintenance requests.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1" />
-                <CardFooter>
-                     <Link href="/dashboard/maintenance" className="w-full">
-                        <Button className="w-full">
-                            View Requests <ArrowRight className="ml-2" />
+                            View History <ArrowRight className="ml-2" />
                         </Button>
                     </Link>
                 </CardFooter>
