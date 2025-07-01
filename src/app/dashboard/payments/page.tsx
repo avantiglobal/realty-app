@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import {
   Table,
   TableBody,
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { payments, properties } from "@/lib/data"
+import { payments as allPayments, properties } from "@/lib/data"
 import { Payment } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
@@ -54,6 +55,14 @@ function PaymentsTable({ payments }: { payments: Payment[] }) {
 }
 
 export default function PaymentsPage() {
+  const [payments, setPayments] = React.useState<Payment[]>([]);
+
+  React.useEffect(() => {
+    // The payments data is dynamic, so we load it on the client
+    // to avoid hydration mismatch errors.
+    setPayments(allPayments);
+  }, []);
+
   const upcomingPayments = payments.filter(p => p.status === 'Upcoming');
   const overduePayments = payments.filter(p => p.status === 'Overdue');
   const paidPayments = payments.filter(p => p.status === 'Paid');
