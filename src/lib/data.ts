@@ -94,6 +94,7 @@ export const maintenanceRequests: MaintenanceRequest[] = [
     description: 'Leaky faucet in the kitchen sink.',
     status: 'In Progress',
     submittedDate: new Date(new Date().setDate(new Date().getDate() - 3)),
+    initiatedBy: 'Tenant',
   },
   {
     id: 'req2',
@@ -101,6 +102,7 @@ export const maintenanceRequests: MaintenanceRequest[] = [
     description: 'HVAC unit not cooling properly.',
     status: 'Submitted',
     submittedDate: new Date(new Date().setDate(new Date().getDate() - 1)),
+    initiatedBy: 'Tenant',
   },
   {
     id: 'req3',
@@ -108,6 +110,7 @@ export const maintenanceRequests: MaintenanceRequest[] = [
     description: 'Front door lock is sticking.',
     status: 'Completed',
     submittedDate: new Date(new Date().setDate(new Date().getDate() - 14)),
+    initiatedBy: 'Tenant',
   },
 ];
 

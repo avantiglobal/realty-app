@@ -30,6 +30,7 @@ export type MaintenanceRequest = {
   description: string;
   status: 'Submitted' | 'In Progress' | 'Completed';
   submittedDate: Date;
+  initiatedBy: 'Tenant' | 'Landlord';
 };
 
 export type Communication = {

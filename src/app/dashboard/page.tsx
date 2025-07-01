@@ -10,19 +10,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { format, addMonths, startOfMonth } from "date-fns";
 import { useUser } from "@/contexts/user-context";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { payments as allPayments } from "@/lib/data";
+import { ArrowRight, PlusCircle } from "lucide-react";
+import { payments as allPayments, maintenanceRequests as allMaintenanceRequests } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { Payment } from "@/lib/types";
+import type { Payment, MaintenanceRequest } from "@/lib/types";
 
 export default function DashboardPage() {
   const [nextPaymentDate, setNextPaymentDate] = React.useState<Date | null>(null);
   const [recentPayments, setRecentPayments] = React.useState<Payment[]>([]);
+  const [maintenanceRequests, setMaintenanceRequests] = React.useState<MaintenanceRequest[]>([]);
   const { user } = useUser();
 
   React.useEffect(() => {
@@ -33,6 +42,7 @@ export default function DashboardPage() {
       .sort((a, b) => b.dueDate.getTime() - a.dueDate.getTime())
       .slice(0, 3);
     setRecentPayments(sortedPayments);
+    setMaintenanceRequests(allMaintenanceRequests);
   }, []);
 
   return (
@@ -57,8 +67,8 @@ export default function DashboardPage() {
                     data-ai-hint="house apartment"
                 />
                 <div className="flex-1">
-                    <h3 className="text-lg font-semibold">Westfield, IN, 46074</h3>
-                    <p className="text-muted-foreground text-sm">1546 Moose Ridge Ln</p>
+                    <h3 className="text-lg font-semibold">1546 Moose Ridge Ln</h3>
+                    <p className="text-muted-foreground text-sm">Westfield, IN, 46074</p>
                 </div>
             </CardContent>
           </Card>
@@ -78,6 +88,60 @@ export default function DashboardPage() {
               ) : (
                   <div className="h-6 w-40 bg-muted rounded animate-pulse mt-1" />
               )}
+            </CardContent>
+          </Card>
+
+           <Card>
+            <CardHeader>
+                <CardTitle>Maintenance Requests</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Link href="/dashboard/maintenance">
+                    <Button className="w-full mb-6">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Submit New Request
+                    </Button>
+                </Link>
+                
+                <h4 className="text-sm font-medium mb-4 text-muted-foreground">Request History</h4>
+                
+                {maintenanceRequests.length > 0 ? (
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="max-w-[150px]">Request</TableHead>
+                                <TableHead>Initiated by</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead className="text-right"></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {maintenanceRequests.map((request) => (
+                                <TableRow key={request.id}>
+                                    <TableCell className="font-medium truncate">{request.description}</TableCell>
+                                    <TableCell>{request.initiatedBy}</TableCell>
+                                    <TableCell>
+                                        <Badge
+                                            variant={request.status === 'Completed' ? 'secondary' : request.status === 'Submitted' ? 'default' : 'outline'}
+                                            className={cn('capitalize', request.status === 'In Progress' && 'bg-accent text-accent-foreground')}
+                                        >
+                                            {request.status}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <Link href="/dashboard/maintenance" className="text-sm font-medium text-primary hover:underline">
+                                            View Details
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                ) : (
+                    <div className="text-sm text-muted-foreground text-center py-8">
+                        No maintenance requests found.
+                    </div>
+                )}
             </CardContent>
           </Card>
         </div>
