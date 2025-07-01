@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -14,7 +15,7 @@ import { useUser } from "@/contexts/user-context";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { payments as allPayments, properties } from "@/lib/data";
+import { payments as allPayments } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { Payment } from "@/lib/types";
@@ -33,10 +34,6 @@ export default function DashboardPage() {
       .slice(0, 3);
     setRecentPayments(sortedPayments);
   }, []);
-
-  const getPropertyName = (propertyId: string) => {
-    return properties.find((p) => p.id === propertyId)?.name || "Unknown";
-  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -79,7 +76,7 @@ export default function DashboardPage() {
                     >
                         <div>
                         <p className="font-medium">
-                            {getPropertyName(payment.propertyId)}
+                           Rent Payment
                         </p>
                         <p className="text-sm text-muted-foreground">
                             {format(payment.dueDate, "P")}
@@ -89,16 +86,16 @@ export default function DashboardPage() {
                         <p className="font-semibold">${payment.amount.toFixed(2)}</p>
                         <Badge
                             variant={
-                            payment.status === "Paid"
-                                ? "secondary"
-                                : payment.status === "Overdue"
-                                ? "destructive"
-                                : "default"
+                                payment.status === 'Overdue'
+                                ? 'destructive'
+                                : 'default'
                             }
                             className={cn(
                             "capitalize text-xs",
-                            payment.status === "Upcoming" &&
-                                "bg-accent text-accent-foreground"
+                            payment.status === 'Upcoming' &&
+                                "bg-accent text-accent-foreground",
+                            payment.status === 'Paid' &&
+                                "bg-green-600 text-white border-transparent hover:bg-green-700"
                             )}
                         >
                             {payment.status}
