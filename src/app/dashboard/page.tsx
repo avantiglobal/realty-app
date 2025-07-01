@@ -22,7 +22,7 @@ import { format, addMonths, startOfMonth } from "date-fns";
 import { useUser } from "@/contexts/user-context";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, PlusCircle } from "lucide-react";
+import { ArrowRight, PlusCircle, Coins } from "lucide-react";
 import { payments as allPayments, maintenanceRequests as allMaintenanceRequests } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -79,15 +79,20 @@ export default function DashboardPage() {
                 Current Balance
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-4xl font-bold">$2,650</p>
-              {nextPaymentDate ? (
-                 <p className="text-muted-foreground mt-1">
-                  Due on {format(nextPaymentDate, "MMMM d, yyyy")}
-                 </p>
-              ) : (
-                  <div className="h-6 w-40 bg-muted rounded animate-pulse mt-1" />
-              )}
+            <CardContent className="flex items-center justify-between">
+              <div>
+                <p className="text-4xl font-bold">$2,650</p>
+                {nextPaymentDate ? (
+                   <p className="text-muted-foreground mt-1">
+                    Due on {format(nextPaymentDate, "MMMM d, yyyy")}
+                   </p>
+                ) : (
+                    <div className="h-6 w-40 bg-muted rounded animate-pulse mt-1" />
+                )}
+              </div>
+              <div className="bg-secondary p-3 rounded-full">
+                <Coins className="h-8 w-8 text-muted-foreground" />
+              </div>
             </CardContent>
           </Card>
         </div>
