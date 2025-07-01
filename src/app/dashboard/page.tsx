@@ -147,17 +147,16 @@ export default function DashboardPage() {
         </Card>
         
         <Card className="md:col-span-2">
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Maintenance Requests</CardTitle>
-            </CardHeader>
-            <CardContent>
                 <Link href="/dashboard/maintenance">
-                    <Button className="mb-6">
+                    <Button>
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Submit New Request
                     </Button>
                 </Link>
-                
+            </CardHeader>
+            <CardContent>
                 {maintenanceRequests.length > 0 ? (
                     <Table>
                         <TableHeader>
