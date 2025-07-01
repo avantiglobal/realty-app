@@ -67,8 +67,8 @@ export default function DashboardPage() {
                     data-ai-hint="house apartment"
                 />
                 <div className="flex-1">
-                    <h3 className="text-lg font-semibold">1546 Moose Ridge Ln</h3>
-                    <p className="text-muted-foreground text-sm">Westfield, IN, 46074</p>
+                    <h3 className="text-lg font-semibold">1546 Moose Ridge Ln, Westfield, IN, 46074</h3>
+                    <p className="text-muted-foreground text-sm">Aquasha Williams</p>
                 </div>
             </CardContent>
           </Card>
