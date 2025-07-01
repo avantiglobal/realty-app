@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { payments, properties } from "@/lib/data"
 import { cn } from "@/lib/utils"
+import { format } from "date-fns"
 
 export function RecentPayments() {
   const recentPayments = payments.slice(0, 5)
@@ -46,7 +47,7 @@ export function RecentPayments() {
               <TableRow key={payment.id}>
                 <TableCell>
                   <div className="font-medium">{getPropertyName(payment.propertyId)}</div>
-                  <div className="text-sm text-muted-foreground">{payment.dueDate.toLocaleDateString()}</div>
+                  <div className="text-sm text-muted-foreground">{format(payment.dueDate, "P")}</div>
                 </TableCell>
                 <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
                 <TableCell className="text-right">

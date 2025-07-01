@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { payments, properties } from "@/lib/data"
 import { Payment } from "@/lib/types"
 import { cn } from "@/lib/utils"
+import { format } from "date-fns"
 
 function PaymentsTable({ payments }: { payments: Payment[] }) {
     const getPropertyName = (propertyId: string) => {
@@ -35,7 +36,7 @@ function PaymentsTable({ payments }: { payments: Payment[] }) {
           <TableRow key={payment.id}>
             <TableCell className="font-medium">{getPropertyName(payment.propertyId)}</TableCell>
             <TableCell>John Doe</TableCell>
-            <TableCell>{payment.dueDate.toLocaleDateString()}</TableCell>
+            <TableCell>{format(payment.dueDate, "P")}</TableCell>
             <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
             <TableCell className="text-right">
               <Badge

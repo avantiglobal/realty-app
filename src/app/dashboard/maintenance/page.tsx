@@ -14,6 +14,7 @@ import { maintenanceRequests, properties } from "@/lib/data"
 import { cn } from "@/lib/utils"
 import { MaintenanceRequestForm } from "@/components/maintenance/request-form"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { format } from "date-fns"
 
 export default function MaintenancePage() {
     const getPropertyName = (propertyId: string) => {
@@ -52,7 +53,7 @@ export default function MaintenancePage() {
                             <TableRow key={request.id}>
                                 <TableCell className="font-medium">{getPropertyName(request.propertyId)}</TableCell>
                                 <TableCell className="text-muted-foreground max-w-sm truncate">{request.description}</TableCell>
-                                <TableCell>{request.submittedDate.toLocaleDateString()}</TableCell>
+                                <TableCell>{format(request.submittedDate, "P")}</TableCell>
                                 <TableCell className="text-right">
                                 <Badge
                                     variant={request.status === 'Completed' ? 'secondary' : request.status === 'Submitted' ? 'default' : 'outline'}
