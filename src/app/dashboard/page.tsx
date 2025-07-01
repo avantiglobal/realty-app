@@ -149,7 +149,7 @@ export default function DashboardPage() {
           </CardContent>
           <CardFooter className="justify-center">
             <Link href="/dashboard/payments">
-              <Button variant="secondary">
+              <Button variant="secondary-outline">
                 View Full History <ArrowRight className="ml-2" />
               </Button>
             </Link>
