@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -51,10 +50,10 @@ export default function DashboardPage() {
             <CardContent className="p-4 flex flex-row gap-4 items-center">
                 <Image
                     alt="Property Image"
-                    className="aspect-square w-24 h-24 object-cover rounded-md"
-                    height="100"
-                    src="https://placehold.co/100x100.png"
-                    width="100"
+                    className="aspect-[3/2] w-24 object-cover rounded-md"
+                    height="64"
+                    src="https://placehold.co/96x64.png"
+                    width="96"
                     data-ai-hint="house apartment"
                 />
                 <div className="flex-1">
