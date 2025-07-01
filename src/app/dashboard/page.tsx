@@ -50,7 +50,7 @@ export default function DashboardPage() {
             <CardContent className="p-4 flex flex-row gap-4 items-center">
                 <Image
                     alt="Property Image"
-                    className="aspect-[3/2] w-24 object-cover rounded-md"
+                    className="aspect-[3/2] w-1/3 object-cover rounded-md"
                     height="64"
                     src="https://placehold.co/96x64.png"
                     width="96"
