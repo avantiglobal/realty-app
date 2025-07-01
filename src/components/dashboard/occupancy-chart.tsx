@@ -22,11 +22,11 @@ import { properties } from "@/lib/data"
 const chartConfig = {
   occupied: {
     label: "Occupied",
-    color: "hsl(var(--chart-2))",
+    color: "hsl(var(--chart-1))",
   },
   vacant: {
     label: "Vacant",
-    color: "hsl(var(--chart-5))",
+    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
 
