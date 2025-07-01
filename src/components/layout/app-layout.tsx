@@ -90,7 +90,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarMenu>
             {allMenuItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href} legacyBehavior passHref>
+                <Link href={item.href}>
                   <SidebarMenuButton
                     isActive={pathname === item.href}
                     tooltip={item.label}
@@ -106,7 +106,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Link href="/dashboard/settings" legacyBehavior passHref>
+              <Link href="/dashboard/settings">
                 <SidebarMenuButton
                   isActive={pathname === "/dashboard/settings"}
                   tooltip="Settings"
