@@ -20,11 +20,13 @@ import type { MaintenanceRequest } from "@/lib/types"
 
 export default function MaintenancePage() {
     const [maintenanceRequests, setMaintenanceRequests] = React.useState<MaintenanceRequest[]>([])
+    const [isLoading, setIsLoading] = React.useState(true)
 
     React.useEffect(() => {
       // The maintenance requests data is dynamic, so we load it on the client
       // to avoid hydration mismatch errors.
       setMaintenanceRequests(allMaintenanceRequests);
+      setIsLoading(false)
     }, [])
 
     const getPropertyName = (propertyId: string) => {
@@ -34,7 +36,7 @@ export default function MaintenancePage() {
   return (
     <div className="flex flex-col gap-6">
         <div>
-            <h1 className="text-3xl font-bold font-headline">Maintenance</h1>
+            <h1 className="text-3xl font-bold font-headline">Maintenance Requests</h1>
             <p className="text-muted-foreground">Track and submit maintenance requests.</p>
         </div>
       <Tabs defaultValue="requests">
@@ -59,7 +61,11 @@ export default function MaintenancePage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {maintenanceRequests.length > 0 ? (
+                            {isLoading ? (
+                                <TableRow>
+                                    <TableCell colSpan={4} className="h-24 text-center">Loading...</TableCell>
+                                </TableRow>
+                            ) : maintenanceRequests.length > 0 ? (
                               maintenanceRequests.map((request) => (
                               <TableRow key={request.id}>
                                   <TableCell className="font-medium">{getPropertyName(request.propertyId)}</TableCell>
@@ -77,7 +83,7 @@ export default function MaintenancePage() {
                               ))
                             ) : (
                               <TableRow>
-                                <TableCell colSpan={4} className="h-24 text-center">Loading...</TableCell>
+                                <TableCell colSpan={4} className="h-24 text-center">No maintenance requests found.</TableCell>
                               </TableRow>
                             )}
                         </TableBody>

@@ -3,14 +3,12 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  Building,
-  LayoutDashboard,
   MessageSquare,
   Settings,
-  Users,
   Wallet,
   Wrench,
   Home,
+  CalendarClock,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -29,28 +27,22 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle"
 import { UserNav } from "@/components/user-nav"
 import { Button } from "@/components/ui/button"
-import { useUser } from "@/contexts/user-context"
 
 const menuItems = [
   {
-    href: "/dashboard",
-    icon: LayoutDashboard,
-    label: "Dashboard",
-  },
-  {
-    href: "/dashboard/properties",
-    icon: Building,
-    label: "Properties",
-  },
-  {
     href: "/dashboard/payments",
     icon: Wallet,
-    label: "Payments",
+    label: "Payment History",
+  },
+  {
+    href: "/dashboard/upcoming-payments",
+    icon: CalendarClock,
+    label: "Upcoming payment",
   },
   {
     href: "/dashboard/maintenance",
     icon: Wrench,
-    label: "Maintenance",
+    label: "Maintenance requests",
   },
   {
     href: "/dashboard/communications",
@@ -59,19 +51,9 @@ const menuItems = [
   },
 ]
 
-const adminMenuItems = [
-    {
-    href: "/dashboard/users",
-    icon: Users,
-    label: "User Management",
-    },
-]
-
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const { user } = useUser()
-
-  const allMenuItems = user.role === 'Admin' ? [...menuItems, ...adminMenuItems] : menuItems
+  const allMenuItems = menuItems
 
   return (
     <SidebarProvider>
@@ -92,7 +74,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem key={item.href}>
                 <Link href={item.href}>
                   <SidebarMenuButton
-                    isActive={pathname === item.href}
+                    isActive={pathname.startsWith(item.href)}
                     tooltip={item.label}
                   >
                     <item.icon />

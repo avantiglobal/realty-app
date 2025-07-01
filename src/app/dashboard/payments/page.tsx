@@ -16,7 +16,7 @@ import { Payment } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 
-function PaymentsTable({ payments }: { payments: Payment[] }) {
+function PaymentsTable({ payments, isLoading, emptyMessage }: { payments: Payment[], isLoading: boolean, emptyMessage: string }) {
     const getPropertyName = (propertyId: string) => {
         return properties.find(p => p.id === propertyId)?.name || "Unknown"
     }
@@ -33,22 +33,32 @@ function PaymentsTable({ payments }: { payments: Payment[] }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {payments.map((payment) => (
-          <TableRow key={payment.id}>
-            <TableCell className="font-medium">{getPropertyName(payment.propertyId)}</TableCell>
-            <TableCell>John Doe</TableCell>
-            <TableCell>{format(payment.dueDate, "P")}</TableCell>
-            <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
-            <TableCell className="text-right">
-              <Badge
-                variant={payment.status === 'Paid' ? 'secondary' : payment.status === 'Overdue' ? 'destructive' : 'default'}
-                className={cn('capitalize', payment.status === 'Upcoming' && 'bg-accent text-accent-foreground')}
-              >
-                {payment.status}
-              </Badge>
-            </TableCell>
-          </TableRow>
-        ))}
+        {isLoading ? (
+            <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center">Loading...</TableCell>
+            </TableRow>
+        ) : payments.length > 0 ? (
+            payments.map((payment) => (
+                <TableRow key={payment.id}>
+                    <TableCell className="font-medium">{getPropertyName(payment.propertyId)}</TableCell>
+                    <TableCell>John Doe</TableCell>
+                    <TableCell>{format(payment.dueDate, "P")}</TableCell>
+                    <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">
+                    <Badge
+                        variant={payment.status === 'Paid' ? 'secondary' : payment.status === 'Overdue' ? 'destructive' : 'default'}
+                        className={cn('capitalize', payment.status === 'Upcoming' && 'bg-accent text-accent-foreground')}
+                    >
+                        {payment.status}
+                    </Badge>
+                    </TableCell>
+                </TableRow>
+            ))
+        ) : (
+            <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center">{emptyMessage}</TableCell>
+            </TableRow>
+        )}
       </TableBody>
     </Table>
   )
@@ -56,11 +66,13 @@ function PaymentsTable({ payments }: { payments: Payment[] }) {
 
 export default function PaymentsPage() {
   const [payments, setPayments] = React.useState<Payment[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     // The payments data is dynamic, so we load it on the client
     // to avoid hydration mismatch errors.
     setPayments(allPayments);
+    setIsLoading(false);
   }, []);
 
   const upcomingPayments = payments.filter(p => p.status === 'Upcoming');
@@ -70,8 +82,8 @@ export default function PaymentsPage() {
   return (
     <div className="flex flex-col gap-6">
         <div>
-            <h1 className="text-3xl font-bold font-headline">Payments</h1>
-            <p className="text-muted-foreground">Track and manage all payments.</p>
+            <h1 className="text-3xl font-bold font-headline">Payment History</h1>
+            <p className="text-muted-foreground">View your history of all payments.</p>
         </div>
       <Tabs defaultValue="all">
         <TabsList>
@@ -81,16 +93,16 @@ export default function PaymentsPage() {
           <TabsTrigger value="paid">Paid</TabsTrigger>
         </TabsList>
         <TabsContent value="all">
-          <PaymentsTable payments={payments} />
+          <PaymentsTable payments={payments} isLoading={isLoading} emptyMessage="No payments found." />
         </TabsContent>
         <TabsContent value="upcoming">
-          <PaymentsTable payments={upcomingPayments} />
+          <PaymentsTable payments={upcomingPayments} isLoading={isLoading} emptyMessage="No upcoming payments." />
         </TabsContent>
         <TabsContent value="overdue">
-          <PaymentsTable payments={overduePayments} />
+          <PaymentsTable payments={overduePayments} isLoading={isLoading} emptyMessage="No overdue payments." />
         </TabsContent>
         <TabsContent value="paid">
-          <PaymentsTable payments={paidPayments} />
+          <PaymentsTable payments={paidPayments} isLoading={isLoading} emptyMessage="No paid payments." />
         </TabsContent>
       </Tabs>
     </div>
