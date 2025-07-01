@@ -147,7 +147,7 @@ export default function DashboardPage() {
                 <div className="text-sm text-muted-foreground text-center pt-8">Loading payments...</div>
             )}
           </CardContent>
-          <CardFooter>
+          <CardFooter className="justify-center">
             <Link href="/dashboard/payments">
               <Button variant="secondary">
                 View Full History <ArrowRight className="ml-2" />
