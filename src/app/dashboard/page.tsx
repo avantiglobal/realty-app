@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { format, addMonths, startOfMonth } from "date-fns";
-import { useUser } from "@/contexts/user-context";
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Coins } from "lucide-react";
@@ -50,7 +50,7 @@ export default function DashboardPage() {
       <div>
         <h1 className="text-3xl font-bold font-headline">Dashboard</h1>
         <p className="text-muted-foreground">
-          Welcome back, {user.name}! Here's a summary of your account.
+          Welcome back, {user ? user.fullName : 'Guest'}! Here's a summary of your account.
         </p>
       </div>
 

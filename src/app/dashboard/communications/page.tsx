@@ -10,14 +10,18 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Send } from "lucide-react"
 import { communications, properties, users as allUsers } from "@/lib/data"
-import { useUser } from "@/contexts/user-context"
 import { cn } from "@/lib/utils"
 
 export default function CommunicationsPage() {
-    const { user } = useUser()
+    // With Clerk implemented, user management is now dynamic.
+    // For this demo, we'll hardcode the user ID to keep the chat UI consistent
+    // with the existing mock data. In a real application, you would
+    // fetch communications based on the logged-in user's ID from Clerk.
+    const currentUserId = "1";
     const activeChat = communications[0];
     const propertyName = properties.find(p => p.id === activeChat.propertyId)?.name;
-    const recipient = allUsers.find(u => u.id === activeChat.users.find(id => id !== user.id));
+    const recipient = allUsers.find(u => u.id === activeChat.users.find(id => id !== currentUserId));
+    const currentUser = allUsers.find(u => u.id === currentUserId);
 
   return (
     <div className="flex flex-col gap-6 h-[calc(100vh-8rem)]">
@@ -56,20 +60,20 @@ export default function CommunicationsPage() {
                  <ScrollArea className="flex-1 p-4">
                     <div className="flex flex-col gap-4">
                         {activeChat.messages.map(message => (
-                            <div key={message.id} className={cn("flex items-end gap-2", message.userId === user.id ? "justify-end" : "justify-start")}>
-                                {message.userId !== user.id && (
+                            <div key={message.id} className={cn("flex items-end gap-2", message.userId === currentUserId ? "justify-end" : "justify-start")}>
+                                {message.userId !== currentUserId && (
                                     <Avatar className="h-8 w-8">
                                         <AvatarImage src={allUsers.find(u => u.id === message.userId)?.avatar} />
                                         <AvatarFallback>{allUsers.find(u => u.id === message.userId)?.name.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 )}
-                                <div className={cn("max-w-xs md:max-w-md p-3 rounded-lg", message.userId === user.id ? "bg-primary text-primary-foreground" : "bg-secondary")}>
+                                <div className={cn("max-w-xs md:max-w-md p-3 rounded-lg", message.userId === currentUserId ? "bg-primary text-primary-foreground" : "bg-secondary")}>
                                     <p className="text-sm">{message.text}</p>
                                 </div>
-                                {message.userId === user.id && (
+                                {message.userId === currentUserId && currentUser && (
                                     <Avatar className="h-8 w-8">
-                                        <AvatarImage src={user.avatar} />
-                                        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                        <AvatarImage src={currentUser.avatar} />
+                                        <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 )}
                             </div>

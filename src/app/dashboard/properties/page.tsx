@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { PlusCircle, MoreVertical } from "lucide-react"
-import { useUser } from "@/contexts/user-context"
+import { useUser } from "@clerk/nextjs"
 import { properties } from "@/lib/data"
 import { Button } from "@/components/ui/button"
 import {
@@ -32,7 +32,7 @@ export default function PropertiesPage() {
             <h1 className="text-3xl font-bold font-headline">Properties</h1>
             <p className="text-muted-foreground">Manage all your properties in one place.</p>
         </div>
-        {user.role === 'Admin' && (
+        {user?.publicMetadata?.role === 'Admin' && (
             <Button>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Property
@@ -53,7 +53,7 @@ export default function PropertiesPage() {
                         width="400"
                         data-ai-hint="house apartment"
                     />
-                    {user.role === 'Admin' && (
+                    {user?.publicMetadata?.role === 'Admin' && (
                         <div className="absolute top-2 right-2">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>

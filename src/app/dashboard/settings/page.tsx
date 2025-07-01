@@ -11,8 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { useUser } from "@/contexts/user-context"
-import { Separator } from "@/components/ui/separator"
+import { useUser } from "@clerk/nextjs"
 
 export default function SettingsPage() {
     const { user } = useUser()
@@ -31,11 +30,11 @@ export default function SettingsPage() {
             <CardContent className="space-y-6">
                 <div className="space-y-2">
                     <Label htmlFor="name">Name</Label>
-                    <Input id="name" defaultValue={user.name} />
+                    <Input id="name" defaultValue={user?.fullName || ''} />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" defaultValue={user.email} />
+                    <Input id="email" type="email" defaultValue={user?.primaryEmailAddress?.emailAddress || ''} />
                 </div>
                  <Button>Update Profile</Button>
             </CardContent>
