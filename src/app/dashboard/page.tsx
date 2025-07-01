@@ -148,7 +148,9 @@ export default function DashboardPage() {
         
         <Card className="md:col-span-2">
             <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <CardTitle>Maintenance Requests</CardTitle>
+                <div>
+                    <CardTitle>Maintenance Requests</CardTitle>
+                </div>
                 <Link href="/dashboard/maintenance">
                     <Button>
                         <PlusCircle className="mr-2 h-4 w-4" />
@@ -162,6 +164,7 @@ export default function DashboardPage() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="max-w-[150px]">Request</TableHead>
+                                <TableHead>Date</TableHead>
                                 <TableHead>Initiated by</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead className="text-right"></TableHead>
@@ -171,6 +174,7 @@ export default function DashboardPage() {
                             {maintenanceRequests.map((request) => (
                                 <TableRow key={request.id}>
                                     <TableCell className="font-medium truncate">{request.description}</TableCell>
+                                    <TableCell>{format(request.submittedDate, "P")}</TableCell>
                                     <TableCell>{request.initiatedBy}</TableCell>
                                     <TableCell>
                                         <Badge
