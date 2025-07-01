@@ -1,6 +1,6 @@
-
 "use client";
 
+import * as React from "react";
 import {
   Card,
   CardContent,
@@ -14,17 +14,25 @@ import { useUser } from "@/contexts/user-context";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { payments, properties } from "@/lib/data";
+import { payments as allPayments, properties } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import type { Payment } from "@/lib/types";
 
 export default function DashboardPage() {
-  const nextPaymentDate = startOfMonth(addMonths(new Date(), 1));
+  const [nextPaymentDate, setNextPaymentDate] = React.useState<Date | null>(null);
+  const [recentPayments, setRecentPayments] = React.useState<Payment[]>([]);
   const { user } = useUser();
 
-  const recentPayments = [...payments]
-    .sort((a, b) => b.dueDate.getTime() - a.dueDate.getTime())
-    .slice(0, 3);
+  React.useEffect(() => {
+    // The date and payment data is dynamic, so we load it on the client
+    // to avoid hydration mismatch errors.
+    setNextPaymentDate(startOfMonth(addMonths(new Date(), 1)));
+    const sortedPayments = [...allPayments]
+      .sort((a, b) => b.dueDate.getTime() - a.dueDate.getTime())
+      .slice(0, 3);
+    setRecentPayments(sortedPayments);
+  }, []);
 
   const getPropertyName = (propertyId: string) => {
     return properties.find((p) => p.id === propertyId)?.name || "Unknown";
@@ -48,9 +56,13 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-4xl font-bold">$2,650</p>
-            <p className="text-muted-foreground mt-1">
-              Due on {format(nextPaymentDate, "MMMM d, yyyy")}
-            </p>
+            {nextPaymentDate ? (
+               <p className="text-muted-foreground mt-1">
+                Due on {format(nextPaymentDate, "MMMM d, yyyy")}
+               </p>
+            ) : (
+                <div className="h-6 w-40 bg-muted rounded animate-pulse mt-1" />
+            )}
           </CardContent>
         </Card>
         <Card className="flex flex-col">
@@ -59,40 +71,44 @@ export default function DashboardPage() {
             <CardDescription>A summary of your recent payments.</CardDescription>
           </CardHeader>
           <CardContent className="flex-1 space-y-4">
-            {recentPayments.map((payment) => (
-              <div
-                key={payment.id}
-                className="flex items-center justify-between"
-              >
-                <div>
-                  <p className="font-medium">
-                    {getPropertyName(payment.propertyId)}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {format(payment.dueDate, "P")}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-semibold">${payment.amount.toFixed(2)}</p>
-                  <Badge
-                    variant={
-                      payment.status === "Paid"
-                        ? "secondary"
-                        : payment.status === "Overdue"
-                        ? "destructive"
-                        : "default"
-                    }
-                    className={cn(
-                      "capitalize text-xs",
-                      payment.status === "Upcoming" &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    {payment.status}
-                  </Badge>
-                </div>
-              </div>
-            ))}
+             {recentPayments.length > 0 ? (
+                recentPayments.map((payment) => (
+                    <div
+                        key={payment.id}
+                        className="flex items-center justify-between"
+                    >
+                        <div>
+                        <p className="font-medium">
+                            {getPropertyName(payment.propertyId)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                            {format(payment.dueDate, "P")}
+                        </p>
+                        </div>
+                        <div className="text-right">
+                        <p className="font-semibold">${payment.amount.toFixed(2)}</p>
+                        <Badge
+                            variant={
+                            payment.status === "Paid"
+                                ? "secondary"
+                                : payment.status === "Overdue"
+                                ? "destructive"
+                                : "default"
+                            }
+                            className={cn(
+                            "capitalize text-xs",
+                            payment.status === "Upcoming" &&
+                                "bg-accent text-accent-foreground"
+                            )}
+                        >
+                            {payment.status}
+                        </Badge>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <div className="text-sm text-muted-foreground text-center pt-8">Loading payments...</div>
+            )}
           </CardContent>
           <CardFooter>
             <Link href="/dashboard/payments" className="w-full">
