@@ -147,7 +147,7 @@ export default function DashboardPage() {
         </Card>
         
         <Card className="md:col-span-2">
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <CardTitle>Maintenance Requests</CardTitle>
                 <Link href="/dashboard/maintenance">
                     <Button>
