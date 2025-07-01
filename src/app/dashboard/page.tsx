@@ -148,8 +148,8 @@ export default function DashboardPage() {
             )}
           </CardContent>
           <CardFooter>
-            <Link href="/dashboard/payments" className="w-full">
-              <Button className="w-full">
+            <Link href="/dashboard/payments">
+              <Button variant="secondary">
                 View Full History <ArrowRight className="ml-2" />
               </Button>
             </Link>
