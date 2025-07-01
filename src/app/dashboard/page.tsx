@@ -67,8 +67,13 @@ export default function DashboardPage() {
                     data-ai-hint="house apartment"
                 />
                 <div className="flex-1">
-                    <h3 className="text-lg font-semibold">1546 Moose Ridge Ln, Westfield, IN, 46074</h3>
-                    <p className="text-muted-foreground text-sm">Aquasha Williams</p>
+                    <h3 className="text-lg font-semibold">
+                      1546 Moose Ridge Ln
+                      <span className="block text-sm font-normal text-muted-foreground">
+                        Westfield, IN, 46074
+                      </span>
+                    </h3>
+                    <p className="text-muted-foreground text-sm mt-1">Aquasha Williams</p>
                 </div>
             </CardContent>
           </Card>
@@ -156,7 +161,13 @@ export default function DashboardPage() {
                 <div>
                     <CardTitle>Maintenance Requests</CardTitle>
                 </div>
-                <Link href="/dashboard/maintenance">
+                <Link href="/dashboard/maintenance" className="sm:hidden">
+                    <Button>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Submit New Request
+                    </Button>
+                </Link>
+                <Link href="/dashboard/maintenance" className="hidden sm:inline-flex">
                     <Button>
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Submit New Request
