@@ -10,7 +10,7 @@ import {
   Users,
   Wallet,
   Wrench,
-  Flame,
+  Home,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -79,9 +79,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarHeader className="p-4">
           <Link href="/dashboard" className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="size-9 bg-primary text-primary-foreground rounded-lg">
-                <Flame className="size-5" />
+                <Home className="size-5" />
             </Button>
-            <h1 className="font-headline text-xl font-semibold text-primary">
+            <h1 className="font-headline text-xl font-semibold text-sidebar-foreground">
               PropTrack Hub
             </h1>
           </Link>
