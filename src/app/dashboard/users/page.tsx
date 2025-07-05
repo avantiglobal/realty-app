@@ -27,6 +27,7 @@ export default async function UsersPage() {
     // We use the admin client here to bypass RLS, as this is an admin-only view.
     // In a production app, you'd want to ensure only authenticated admins can access this page.
     try {
+        console.log("Attempting to connect to Supabase with admin client...");
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -51,12 +52,13 @@ export default async function UsersPage() {
             throw error;
         }
         
+        console.log("✅ Success! Connected to Supabase and fetched users.");
         users = data;
     } catch (error: any) {
         // Log the full error for debugging on the server
-        console.error("Error fetching users:", error.message);
+        console.error("❌ CONNECTION FAILED:", error.message);
         // Set a user-friendly error message to display in the UI
-        fetchError = "Could not fetch users. Please check your connection and environment variables.";
+        fetchError = "Could not fetch users. Please check your terminal console for detailed error messages and verify your connection and environment variables.";
     }
 
     return (
