@@ -12,6 +12,7 @@ const formSchema = z.object({
 })
 
 export async function addUser(values: z.infer<typeof formSchema>) {
+    const cookieStore = cookies()
     const validatedFields = formSchema.safeParse(values)
 
     if (!validatedFields.success) {
@@ -19,8 +20,7 @@ export async function addUser(values: z.infer<typeof formSchema>) {
     }
 
     const { name, email, role } = validatedFields.data
-
-    const cookieStore = cookies()
+    
     const supabase = createServerClient(cookieStore)
 
     const { data: { user } } = await supabase.auth.getUser()
