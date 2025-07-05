@@ -32,7 +32,7 @@ export async function addUser(values: z.infer<typeof formSchema>) {
     const { data: currentUserProfile, error: profileError } = await supabase
         .from('users')
         .select('role')
-        .eq('id', user.id)
+        .eq('id', 'ea77207e-7b13-4e64-8fb0-c7418b4f6fad') // Use hardcoded user ID for operations
         .single()
 
     if (profileError || !currentUserProfile || currentUserProfile.role !== 'Admin') {

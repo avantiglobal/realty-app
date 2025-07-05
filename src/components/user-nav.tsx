@@ -20,9 +20,11 @@ import Link from "next/link"
 export function UserNav() {
   // Mock authenticated user as requested
   const user = {
+    id: "ea77207e-7b13-4e64-8fb0-c7418b4f6fad",
     name: "Adrián",
     email: "adrian@avanti.marketing",
     avatarUrl: "", // No avatar provided, will use fallback
+    role: "Admin",
   }
 
   return (
