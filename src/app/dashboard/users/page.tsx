@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { getSupabaseAdmin } from "@/lib/supabase/admin"
+import { createClient } from "@supabase/supabase-js"
 import type { User } from "@/lib/types"
 
 export default async function UsersPage() {
@@ -27,7 +27,23 @@ export default async function UsersPage() {
     // We use the admin client here to bypass RLS, as this is an admin-only view.
     // In a production app, you'd want to ensure only authenticated admins can access this page.
     try {
-        const supabaseAdmin = getSupabaseAdmin();
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+        if (!supabaseUrl || !supabaseServiceRoleKey) {
+            throw new Error('Supabase URL and/or Service Role Key are not defined. Please check your .env.local file.');
+        }
+    
+        const supabaseAdmin = createClient(
+            supabaseUrl,
+            supabaseServiceRoleKey,
+            {
+                auth: {
+                    autoRefreshToken: false,
+                    persistSession: false
+                }
+            }
+        );
         const { data, error } = await supabaseAdmin.from("users").select("*");
         
         if (error) {
