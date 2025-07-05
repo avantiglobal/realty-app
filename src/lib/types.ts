@@ -1,8 +1,8 @@
 export type User = {
   id: string;
-  name: string;
-  email: string;
-  avatar: string;
+  name: string | null;
+  email: string | null;
+  avatar_url: string | null;
   role: 'Admin' | 'User'; // Admin = Landlord, User = Tenant
 };
 

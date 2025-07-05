@@ -5,14 +5,14 @@ export const users: User[] = [
     id: '1',
     name: 'Admin User',
     email: 'admin@proptrack.com',
-    avatar: '/avatars/01.png',
+    avatar_url: '/avatars/01.png',
     role: 'Admin',
   },
   {
     id: '2',
     name: 'End User',
     email: 'user@proptrack.com',
-    avatar: '/avatars/02.png',
+    avatar_url: '/avatars/02.png',
     role: 'User',
   },
 ];

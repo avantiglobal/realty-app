@@ -47,8 +47,8 @@ export default function CommunicationsPage() {
             <div className="col-span-1 md:col-span-2 lg:col-span-3 flex flex-col">
                 <div className="p-4 border-b flex items-center gap-4">
                     <Avatar>
-                        <AvatarImage src={recipient?.avatar} alt={recipient?.name} />
-                        <AvatarFallback>{recipient?.name.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={recipient?.avatar_url ?? undefined} alt={recipient?.name ?? ''} />
+                        <AvatarFallback>{recipient?.name?.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
                         <h3 className="font-semibold">{recipient?.name}</h3>
@@ -61,8 +61,8 @@ export default function CommunicationsPage() {
                             <div key={message.id} className={cn("flex items-end gap-2", message.userId === currentUserId ? "justify-end" : "justify-start")}>
                                 {message.userId !== currentUserId && (
                                     <Avatar className="h-8 w-8">
-                                        <AvatarImage src={allUsers.find(u => u.id === message.userId)?.avatar} />
-                                        <AvatarFallback>{allUsers.find(u => u.id === message.userId)?.name.charAt(0)}</AvatarFallback>
+                                        <AvatarImage src={allUsers.find(u => u.id === message.userId)?.avatar_url ?? undefined} />
+                                        <AvatarFallback>{allUsers.find(u => u.id === message.userId)?.name?.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 )}
                                 <div className={cn("max-w-xs md:max-w-md p-3 rounded-lg", message.userId === currentUserId ? "bg-primary text-primary-foreground" : "bg-secondary")}>
@@ -70,8 +70,8 @@ export default function CommunicationsPage() {
                                 </div>
                                 {message.userId === currentUserId && currentUser && (
                                     <Avatar className="h-8 w-8">
-                                        <AvatarImage src={currentUser.avatar} />
-                                        <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
+                                        <AvatarImage src={currentUser.avatar_url ?? undefined} />
+                                        <AvatarFallback>{currentUser.name?.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 )}
                             </div>
