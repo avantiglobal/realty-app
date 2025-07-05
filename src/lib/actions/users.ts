@@ -3,7 +3,7 @@
 import { z } from "zod"
 import { cookies } from "next/headers"
 import { createClient } from "@/lib/supabase/server"
-import { supabaseAdmin } from "@/lib/supabase/admin"
+import { getSupabaseAdmin } from "@/lib/supabase/admin"
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -38,7 +38,8 @@ export async function addUser(values: z.infer<typeof formSchema>) {
     if (profileError || !currentUserProfile || currentUserProfile.role !== 'Admin') {
         return { success: false, message: "Unauthorized. You must be an admin to add users." }
     }
-
+    
+    const supabaseAdmin = getSupabaseAdmin();
     const { error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(
         email,
         { data: { name, role } }

@@ -17,11 +17,12 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { supabaseAdmin } from "@/lib/supabase/admin"
+import { getSupabaseAdmin } from "@/lib/supabase/admin"
 
 export default async function UsersPage() {
     // We use the admin client here to bypass RLS, as this is an admin-only view.
     // In a production app, you'd want to ensure only authenticated admins can access this page.
+    const supabaseAdmin = getSupabaseAdmin();
     const { data: users, error } = await supabaseAdmin.from("users").select("*")
 
     if (error) {
