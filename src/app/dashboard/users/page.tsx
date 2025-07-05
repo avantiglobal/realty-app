@@ -18,51 +18,46 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { User } from "@/lib/types"
-import { users as mockUsers } from "@/lib/data"
-// import { createClient } from "@supabase/supabase-js"
+import { createClient } from "@supabase/supabase-js"
 
 export default async function UsersPage() {
-    // TEMPORARILY REVERTED TO MOCK DATA DUE TO PERSISTENT FETCH ERRORS
-    // This allows UI development to continue while the underlying network/env issue is resolved.
-    const users: User[] | null = mockUsers;
-    const fetchError: string | null = null;
+    let users: User[] | null = null;
+    let fetchError: string | null = null;
     
-    // try {
-    //     console.log("Attempting to connect to Supabase with admin client...");
-    //     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    //     const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    try {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    //     if (!supabaseUrl || !supabaseServiceRoleKey) {
-    //         throw new Error('Supabase URL and/or Service Role Key are not defined. Please check your .env file.');
-    //     }
-
-    //     console.log(`✅ Success! Read Supabase URL from .env file.`);
+        if (!supabaseUrl || !supabaseServiceRoleKey) {
+            throw new Error('Supabase URL and/or Service Role Key are not defined. Please check your .env file.');
+        }
     
-    //     const supabaseAdmin = createClient(
-    //         supabaseUrl,
-    //         supabaseServiceRoleKey,
-    //         {
-    //             auth: {
-    //                 autoRefreshToken: false,
-    //                 persistSession: false
-    //             }
-    //         }
-    //     );
-    //     const { data, error } = await supabaseAdmin.from("users").select("*");
+        const supabaseAdmin = createClient(
+            supabaseUrl,
+            supabaseServiceRoleKey,
+            {
+                auth: {
+                    autoRefreshToken: false,
+                    persistSession: false
+                }
+            }
+        );
+
+        // We explicitly await the response from the server here.
+        const { data, error } = await supabaseAdmin.from("users").select("*");
         
-    //     if (error) {
-    //         // Throw the error to be caught by the catch block
-    //         throw error;
-    //     }
+        if (error) {
+            // Throw the error to be caught by the catch block
+            throw error;
+        }
         
-    //     console.log("✅ Success! Connected to Supabase and fetched users.");
-    //     users = data;
-    // } catch (error: any) {
-    //     // Log the full error for debugging on the server
-    //     console.error("❌ CONNECTION FAILED:", error.message);
-    //     // Set a user-friendly error message to display in the UI
-    //     fetchError = "Could not fetch users. Please check your terminal console for detailed error messages and verify your connection and environment variables.";
-    // }
+        users = data;
+    } catch (error: any) {
+        // Log the full error for debugging on the server
+        console.error("❌ CONNECTION FAILED:", error.message);
+        // Set a user-friendly error message to display in the UI
+        fetchError = "Could not fetch users. Please check your terminal console for detailed error messages and verify your connection and environment variables.";
+    }
 
     return (
         <div className="flex flex-col gap-6">
