@@ -3,7 +3,14 @@ export type User = {
   name: string;
   email: string;
   avatar: string;
-  role: 'Admin' | 'User';
+  role: 'Admin' | 'User'; // Admin = Landlord, User = Tenant
+};
+
+export type Vendor = {
+  id: string;
+  name: string;
+  contactEmail: string;
+  specialty: string;
 };
 
 export type Property = {
@@ -11,26 +18,52 @@ export type Property = {
   name: string;
   address: string;
   imageUrl: string;
-  ownerId: string;
-  rent: number;
-  status: 'Occupied' | 'Vacant';
+  ownerId: string; // Landlord's user ID
 };
+
+export type ContractStatus = 'Sent' | 'Signed' | 'In Progress' | 'Renewed' | 'Finished';
+
+export type Contract = {
+    id: string;
+    propertyId: string;
+    landlordId: string;
+    tenantId: string;
+    startDate: Date;
+    endDate: Date;
+    status: ContractStatus;
+    rentAmount: number;
+};
+
+export type PaymentStatus = 'Upcoming' | 'Paid' | 'Overdue';
 
 export type Payment = {
   id: string;
+  contractId: string;
   propertyId: string;
   amount: number;
   dueDate: Date;
-  status: 'Paid' | 'Upcoming' | 'Overdue';
+  status: PaymentStatus;
+  paidDate?: Date;
+};
+
+export type MaintenanceRequestStatus = 'Submitted' | 'In Progress' | 'Completed';
+
+export type MaintenanceActivity = {
+    id:string;
+    timestamp: Date;
+    description: string;
+    authorId: string;
 };
 
 export type MaintenanceRequest = {
   id: string;
   propertyId: string;
   description: string;
-  status: 'Submitted' | 'In Progress' | 'Completed';
+  status: MaintenanceRequestStatus;
   submittedDate: Date;
   initiatedBy: 'Tenant' | 'Landlord';
+  assignedVendorId?: string;
+  activityLog: MaintenanceActivity[];
 };
 
 export type Communication = {
