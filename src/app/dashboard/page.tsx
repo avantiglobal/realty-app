@@ -52,8 +52,8 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 items-start">
+        <div className="flex flex-col gap-4">
           <Card>
             <CardContent className="p-4 flex flex-row gap-4 items-center">
                 <Image
