@@ -18,15 +18,29 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getSupabaseAdmin } from "@/lib/supabase/admin"
+import type { User } from "@/lib/types"
 
 export default async function UsersPage() {
+    let users: User[] | null = [];
+    let fetchError: string | null = null;
+    
     // We use the admin client here to bypass RLS, as this is an admin-only view.
     // In a production app, you'd want to ensure only authenticated admins can access this page.
-    const supabaseAdmin = getSupabaseAdmin();
-    const { data: users, error } = await supabaseAdmin.from("users").select("*")
-
-    if (error) {
-        console.error("Error fetching users:", error.message)
+    try {
+        const supabaseAdmin = getSupabaseAdmin();
+        const { data, error } = await supabaseAdmin.from("users").select("*");
+        
+        if (error) {
+            // Throw the error to be caught by the catch block
+            throw error;
+        }
+        
+        users = data;
+    } catch (error: any) {
+        // Log the full error for debugging on the server
+        console.error("Error fetching users:", error.message);
+        // Set a user-friendly error message to display in the UI
+        fetchError = "Could not fetch users. Please check your connection and environment variables.";
     }
 
     return (
@@ -55,7 +69,13 @@ export default async function UsersPage() {
                           </TableRow>
                       </TableHeader>
                       <TableBody>
-                          {users && users.length > 0 ? (
+                          {fetchError ? (
+                            <TableRow>
+                              <TableCell colSpan={3} className="h-24 text-center text-destructive">
+                                {fetchError}
+                              </TableCell>
+                            </TableRow>
+                          ) : users && users.length > 0 ? (
                             users.map((user) => (
                             <TableRow key={user.id}>
                                 <TableCell>
@@ -78,7 +98,7 @@ export default async function UsersPage() {
                           ) : (
                             <TableRow>
                               <TableCell colSpan={3} className="h-24 text-center">
-                                {error ? 'Error loading users.' : 'No users found.'}
+                                No users found.
                               </TableCell>
                             </TableRow>
                           )}
