@@ -17,13 +17,17 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { createClient } from "@supabase/supabase-js"
+// import { createClient } from "@supabase/supabase-js"
+import { users as mockUsers } from "@/lib/data"
 import type { User } from "@/lib/types"
 
 export default async function UsersPage() {
-    let users: User[] | null = [];
+    // Temporarily using mock data to unblock UI development due to persistent connection issues.
+    // The Supabase connection code is commented out below for easy re-activation.
+    let users: User[] | null = mockUsers;
     let fetchError: string | null = null;
     
+    /*
     // We use the admin client here to bypass RLS, as this is an admin-only view.
     // In a production app, you'd want to ensure only authenticated admins can access this page.
     try {
@@ -60,6 +64,7 @@ export default async function UsersPage() {
         // Set a user-friendly error message to display in the UI
         fetchError = "Could not fetch users. Please check your terminal console for detailed error messages and verify your connection and environment variables.";
     }
+    */
 
     return (
         <div className="flex flex-col gap-6">
