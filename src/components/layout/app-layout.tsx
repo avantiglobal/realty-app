@@ -10,6 +10,7 @@ import {
   Home,
   CalendarClock,
   Building2,
+  Users,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -55,6 +56,11 @@ const menuItems = [
     href: "/dashboard/communications",
     icon: MessageSquare,
     label: "Communications",
+  },
+  {
+    href: "/dashboard/users",
+    icon: Users,
+    label: "Users",
   },
 ]
 
