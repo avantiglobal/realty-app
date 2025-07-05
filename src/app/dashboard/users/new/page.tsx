@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import Link from "next/link"
+import * as React from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -31,6 +32,7 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
+import { addUser } from "@/lib/actions/users"
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -40,6 +42,8 @@ const formSchema = z.object({
 
 export default function AddUserPage() {
   const { toast } = useToast()
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,13 +52,32 @@ export default function AddUserPage() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    toast({
-      title: "User Created!",
-      description: "The new user has been added successfully.",
-    })
-    form.reset()
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true)
+    try {
+        const result = await addUser(values)
+        if (result.success) {
+            toast({
+                title: "User Invited!",
+                description: result.message,
+            })
+            form.reset()
+        } else {
+            toast({
+                title: "Error",
+                description: result.message,
+                variant: "destructive"
+            })
+        }
+    } catch (error) {
+        toast({
+            title: "Error",
+            description: "An unexpected error occurred.",
+            variant: "destructive"
+        })
+    } finally {
+        setIsSubmitting(false)
+    }
   }
 
   return (
@@ -122,7 +145,9 @@ export default function AddUserPage() {
                     )}
                     />
                     <div className="flex gap-2">
-                        <Button type="submit">Add User</Button>
+                        <Button type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? 'Inviting User...' : 'Invite User'}
+                        </Button>
                         <Button variant="outline" asChild>
                             <Link href="/dashboard/users">Cancel</Link>
                         </Button>
