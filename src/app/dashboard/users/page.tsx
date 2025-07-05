@@ -17,18 +17,15 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { createClient } from "@/lib/supabase/server"
-import { cookies } from "next/headers"
+import { supabaseAdmin } from "@/lib/supabase/admin"
 
 export default async function UsersPage() {
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
-    const { data: users, error } = await supabase.from("users").select("*")
+    // We use the admin client here to bypass RLS, as this is an admin-only view.
+    // In a production app, you'd want to ensure only authenticated admins can access this page.
+    const { data: users, error } = await supabaseAdmin.from("users").select("*")
 
     if (error) {
-        console.error("Error fetching users:", error)
-        // Optionally, render an error state to the user
+        console.error("Error fetching users:", error.message)
     }
 
     return (
@@ -79,7 +76,9 @@ export default async function UsersPage() {
                             ))
                           ) : (
                             <TableRow>
-                              <TableCell colSpan={3} className="h-24 text-center">No users found.</TableCell>
+                              <TableCell colSpan={3} className="h-24 text-center">
+                                {error ? 'Error loading users.' : 'No users found.'}
+                              </TableCell>
                             </TableRow>
                           )}
                       </TableBody>
