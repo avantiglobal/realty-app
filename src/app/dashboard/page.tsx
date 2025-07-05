@@ -21,7 +21,7 @@ import {
 import { format, addMonths, startOfMonth } from "date-fns";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Coins } from "lucide-react";
+import { Coins } from "lucide-react";
 import { payments as allPayments, maintenanceRequests as allMaintenanceRequests } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -107,9 +107,7 @@ export default function DashboardPage() {
               <CardDescription>Your 3 most recent payments.</CardDescription>
             </div>
             <Link href="/dashboard/payments" className="hidden sm:block">
-              <Button>
-                <PlusCircle className="mr-2 h-4 w-4" />View Full History
-              </Button>
+              <Button size="sm">View Full History</Button>
             </Link>
           </CardHeader>
           <CardContent className="flex-1">
@@ -144,8 +142,8 @@ export default function DashboardPage() {
           </CardContent>
           <CardFooter className="sm:hidden">
             <Link href="/dashboard/payments" className="w-full">
-              <Button className="w-full">
-                <PlusCircle className="mr-2 h-4 w-4" />View Full History
+              <Button size="sm" className="w-full">
+                View Full History
               </Button>
             </Link>
           </CardFooter>
@@ -157,14 +155,12 @@ export default function DashboardPage() {
                     <CardTitle>Maintenance Requests</CardTitle>
                 </div>
                 <Link href="/dashboard/maintenance" className="sm:hidden">
-                    <Button>
-                        <PlusCircle className="mr-2 h-4 w-4" />
+                    <Button size="sm">
                         Submit New Request
                     </Button>
                 </Link>
                 <Link href="/dashboard/maintenance" className="hidden sm:inline-flex">
-                    <Button>
-                        <PlusCircle className="mr-2 h-4 w-4" />
+                    <Button size="sm">
                         Submit New Request
                     </Button>
                 </Link>

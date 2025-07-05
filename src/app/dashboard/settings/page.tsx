@@ -34,7 +34,7 @@ export default function SettingsPage() {
                     <Label htmlFor="email">Email</Label>
                     <Input id="email" type="email" defaultValue="admin@proptrack.com" />
                 </div>
-                 <Button>Update Profile</Button>
+                 <Button size="sm">Update Profile</Button>
             </CardContent>
         </Card>
         

@@ -98,7 +98,7 @@ export function MaintenanceRequestForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit Request</Button>
+        <Button type="submit" size="sm">Submit Request</Button>
       </form>
     </Form>
   )
