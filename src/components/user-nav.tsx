@@ -1,4 +1,5 @@
-"use client"
+import { cookies } from "next/headers"
+import Link from "next/link"
 
 import {
   Avatar,
@@ -15,16 +16,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import Link from "next/link"
+import { createClient } from "@/lib/supabase/server"
+import { logout } from "@/lib/actions/auth"
+import type { User } from "@/lib/types"
 
-export function UserNav() {
-  // Mock authenticated user as requested
-  const user = {
-    id: "ea77207e-7b13-4e64-8fb0-c7418b4f6fad",
-    name: "Adrián",
-    email: "adrian@avanti.marketing",
-    avatarUrl: "", // No avatar provided, will use fallback
-    role: "Admin",
+export async function UserNav() {
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+  const { data: { user: authUser } } = await supabase.auth.getUser()
+
+  let user: User | null = null;
+
+  if (authUser) {
+     const { data: userProfile } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', authUser.id)
+        .single()
+    user = userProfile;
+  }
+  
+  if (!user) {
+      return (
+          <Link href="/login">
+            <Button>Sign In</Button>
+          </Link>
+      )
   }
 
   return (
@@ -32,8 +49,8 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.avatarUrl} alt={user.name ?? ""} />
-            <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+            <AvatarImage src={user.avatar_url ?? undefined} alt={user.name ?? ""} />
+            <AvatarFallback>{user.name?.charAt(0) ?? 'U'}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -55,9 +72,13 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Log out
-        </DropdownMenuItem>
+        <form action={logout}>
+          <button type="submit" className="w-full">
+            <DropdownMenuItem>
+              Log out
+            </DropdownMenuItem>
+          </button>
+        </form>
       </DropdownMenuContent>
     </DropdownMenu>
   )

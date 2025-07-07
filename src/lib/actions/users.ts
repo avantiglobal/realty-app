@@ -3,7 +3,7 @@
 import { z } from "zod"
 import { cookies } from "next/headers"
 import { createClient as createServerClient } from "@/lib/supabase/server"
-import { createClient } from "@supabase/supabase-js"
+import { createClient as createAdminClient } from "@supabase/supabase-js"
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -32,7 +32,7 @@ export async function addUser(values: z.infer<typeof formSchema>) {
     const { data: currentUserProfile, error: profileError } = await supabase
         .from('users')
         .select('role')
-        .eq('id', 'ea77207e-7b13-4e64-8fb0-c7418b4f6fad') // Use hardcoded user ID for operations
+        .eq('id', user.id) // Use authenticated user's ID
         .single()
 
     if (profileError || !currentUserProfile || currentUserProfile.role !== 'Admin') {
@@ -46,7 +46,7 @@ export async function addUser(values: z.infer<typeof formSchema>) {
         return { success: false, message: "Server configuration error: Supabase keys not set." }
     }
     
-    const supabaseAdmin = createClient(
+    const supabaseAdmin = createAdminClient(
         supabaseUrl,
         supabaseServiceRoleKey,
         {
