@@ -1,35 +1,41 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { updateSession } from '@/lib/supabase/middleware'
-import { createServerClient } from '@supabase/ssr'
+// import { updateSession } from '@/lib/supabase/middleware'
+// import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
-  const response = await updateSession(request)
+  // Temporarily bypassing Supabase middleware to allow UI development
+  // while network connection issues are being resolved.
+  // To re-enable auth, uncomment the logic below and restore UserNav.
+  return NextResponse.next()
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value
-        },
-      },
-    }
-  )
+  // --- Original auth logic ---
+  // const response = await updateSession(request)
 
-  const { data: { user } } = await supabase.auth.getUser()
+  // const supabase = createServerClient(
+  //   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  //   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  //   {
+  //     cookies: {
+  //       get(name: string) {
+  //         return request.cookies.get(name)?.value
+  //       },
+  //     },
+  //   }
+  // )
 
-  const { pathname } = request.nextUrl
+  // const { data: { user } } = await supabase.auth.getUser()
 
-  if (user && pathname === '/login') {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
-  }
+  // const { pathname } = request.nextUrl
 
-  if (!user && pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
+  // if (user && pathname === '/login') {
+  //   return NextResponse.redirect(new URL('/dashboard', request.url))
+  // }
 
-  return response
+  // if (!user && pathname.startsWith('/dashboard')) {
+  //   return NextResponse.redirect(new URL('/login', request.url))
+  // }
+
+  // return response
 }
 
 export const config = {

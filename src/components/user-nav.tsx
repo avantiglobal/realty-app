@@ -1,4 +1,3 @@
-import { cookies } from "next/headers"
 import Link from "next/link"
 
 import {
@@ -16,31 +15,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { createClient } from "@/lib/supabase/server"
 import { logout } from "@/lib/actions/auth"
 import type { User } from "@/lib/types"
+import { users } from "@/lib/data"
 
-export async function UserNav() {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
-  const { data: { user: authUser } } = await supabase.auth.getUser()
+export function UserNav() {
+  // Using mock user data to bypass Supabase connection issues.
+  // When the connection issue is resolved, this can be reverted
+  // to an async component that fetches the real user.
+  const user: User | undefined = users.find(u => u.role === 'Admin');
 
-  if (!authUser) {
+  // This check handles the case where the app is in a logged-out state.
+  // To re-enable real authentication, the middleware.ts file must be restored.
+  if (!user) {
     return (
       <Link href="/login">
         <Button>Sign In</Button>
       </Link>
     )
-  }
-
-  // Construct the user object from the authenticated user's data and metadata.
-  // This avoids an extra database call to the 'users' table.
-  const user: User = {
-    id: authUser.id,
-    email: authUser.email ?? null,
-    name: authUser.user_metadata.name ?? 'Unnamed User',
-    avatar_url: authUser.user_metadata.avatar_url ?? null,
-    role: authUser.user_metadata.role ?? 'User',
   }
 
   return (

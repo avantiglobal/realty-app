@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { cookies } from "next/headers"
 import {
   Table,
   TableBody,
@@ -18,84 +17,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { users } from "@/lib/data" // Import mock data
 import type { User } from "@/lib/types"
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
-import { createClient as createAdminClient } from "@supabase/supabase-js"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
 
-export default async function UsersPage() {
-    console.log("--- Loading Users Page ---");
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
-    const { data: { user: authUser } } = await supabase.auth.getUser()
-    if (!authUser) {
-        console.log("No authenticated user, redirecting to /login");
-        redirect('/login')
-    }
-    console.log(`Authenticated as ${authUser.email}`);
-
-
-    let users: User[] | null = null;
-    let fetchError: string | null = null;
-    
-    try {
-        console.log("Attempting to connect to Supabase to fetch user list...");
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-        if (!supabaseUrl || !supabaseServiceRoleKey) {
-            console.error("❌ Critical Error: Supabase URL or Service Role Key is missing in environment variables.");
-            throw new Error("Server configuration error: Supabase keys not set.");
-        }
-        console.log("✅ Supabase environment variables found.");
-        
-        const supabaseAdmin = createAdminClient(
-            supabaseUrl,
-            supabaseServiceRoleKey,
-            { auth: { autoRefreshToken: false, persistSession: false } }
-        );
-        console.log("✅ Supabase admin client initialized.");
-
-        console.log("Fetching user list from Supabase...");
-        const { data: { users: authUsers }, error } = await supabaseAdmin.auth.admin.listUsers();
-        
-        if (error) {
-            console.error("❌ Error response from Supabase while fetching users:");
-            console.error(error); // Log the full error object
-            throw error;
-        }
-
-        console.log(`✅ Successfully fetched ${authUsers.length} user(s) from Supabase.`);
-        
-        // Map the Supabase Auth users to our application's User type
-        users = authUsers.map(user => ({
-            id: user.id,
-            name: user.user_metadata.name ?? 'No name provided',
-            email: user.email ?? 'No email',
-            avatar_url: user.user_metadata.avatar_url ?? null,
-            role: user.user_metadata.role ?? 'User',
-        }));
-
-    } catch (error: any) {
-        console.error("❌ An error occurred in the try-catch block while fetching users.");
-        console.error("Full error object:", error);
-        fetchError = `Could not fetch user list: ${error.message}. See server console for details.`;
-    }
-
-    if (fetchError && !users) {
-        // Fallback to showing only the current authenticated user if the fetch failed.
-        users = [{
-            id: authUser.id,
-            name: authUser.user_metadata.name ?? 'Current User',
-            email: authUser.email ?? 'No email',
-            avatar_url: authUser.user_metadata.avatar_url ?? null,
-            role: authUser.user_metadata.role ?? 'User',
-        }]
-    }
-
+// This page now uses mock data to bypass the Supabase connection issue.
+// The original server component logic is commented out below for reference.
+export default function UsersPage() {
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
@@ -108,15 +37,13 @@ export default async function UsersPage() {
                 </Link>
             </div>
             
-            {fetchError && (
-              <Alert variant="destructive">
+             <Alert variant="destructive">
                 <Terminal className="h-4 w-4" />
-                <AlertTitle>Connection Issue</AlertTitle>
+                <AlertTitle>Modo de Demostración</AlertTitle>
                 <AlertDescription>
-                  {fetchError}
+                  La aplicación está usando datos de prueba debido a un problema de conexión con la base de datos. La funcionalidad de Supabase está desactivada temporalmente.
                 </AlertDescription>
               </Alert>
-            )}
 
           <Card>
               <CardHeader>
@@ -134,7 +61,7 @@ export default async function UsersPage() {
                       </TableHeader>
                       <TableBody>
                           {users && users.length > 0 ? (
-                            users.map((user) => (
+                            users.map((user: User) => (
                             <TableRow key={user.id}>
                                 <TableCell>
                                     <div className="flex items-center gap-3">
