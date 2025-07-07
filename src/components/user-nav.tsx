@@ -25,23 +25,22 @@ export async function UserNav() {
   const supabase = createClient(cookieStore)
   const { data: { user: authUser } } = await supabase.auth.getUser()
 
-  let user: User | null = null;
-
-  if (authUser) {
-     const { data: userProfile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', authUser.id)
-        .single()
-    user = userProfile;
+  if (!authUser) {
+    return (
+      <Link href="/login">
+        <Button>Sign In</Button>
+      </Link>
+    )
   }
-  
-  if (!user) {
-      return (
-          <Link href="/login">
-            <Button>Sign In</Button>
-          </Link>
-      )
+
+  // Construct the user object from the authenticated user's data and metadata.
+  // This avoids an extra database call to the 'users' table.
+  const user: User = {
+    id: authUser.id,
+    email: authUser.email ?? null,
+    name: authUser.user_metadata.name ?? 'Unnamed User',
+    avatar_url: authUser.user_metadata.avatar_url ?? null,
+    role: authUser.user_metadata.role ?? 'User',
   }
 
   return (

@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { User } from "@/lib/types"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
+import { createClient as createAdminClient } from "@supabase/supabase-js"
 
 export default async function UsersPage() {
     const cookieStore = cookies()
@@ -35,15 +36,36 @@ export default async function UsersPage() {
     let fetchError: string | null = null;
     
     try {
-        const { data, error } = await supabase.from("users").select("*");
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+        if (!supabaseUrl || !supabaseServiceRoleKey) {
+            throw new Error("Server configuration error: Supabase keys not set.");
+        }
+        
+        const supabaseAdmin = createAdminClient(
+            supabaseUrl,
+            supabaseServiceRoleKey,
+            { auth: { autoRefreshToken: false, persistSession: false } }
+        );
+
+        const { data: { users: authUsers }, error } = await supabaseAdmin.auth.admin.listUsers();
         
         if (error) {
             throw error;
         }
         
-        users = data;
+        // Map the Supabase Auth users to our application's User type
+        users = authUsers.map(user => ({
+            id: user.id,
+            name: user.user_metadata.name ?? 'No name provided',
+            email: user.email ?? 'No email',
+            avatar_url: user.user_metadata.avatar_url ?? null,
+            role: user.user_metadata.role ?? 'User',
+        }));
+
     } catch (error: any) {
-        console.error("❌ CONNECTION FAILED:", error.message);
+        console.error("❌ Error fetching users:", error.message);
         fetchError = "Could not fetch users. Please check your RLS policies and network connection.";
     }
 

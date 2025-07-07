@@ -29,13 +29,9 @@ export async function addUser(values: z.infer<typeof formSchema>) {
         return { success: false, message: "Authentication required." }
     }
 
-    const { data: currentUserProfile, error: profileError } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', user.id) // Use authenticated user's ID
-        .single()
-
-    if (profileError || !currentUserProfile || currentUserProfile.role !== 'Admin') {
+    // Check the user's role from their metadata to authorize the action.
+    // This avoids an extra database call to the 'users' table.
+    if (user.user_metadata?.role !== 'Admin') {
         return { success: false, message: "Unauthorized. You must be an admin to add users." }
     }
     
