@@ -1,5 +1,7 @@
 'use server'
 
+import { createClient } from "@/lib/supabase/server"
+import { cookies } from "next/headers"
 import { z } from "zod"
 
 const formSchema = z.object({
@@ -9,19 +11,35 @@ const formSchema = z.object({
 })
 
 export async function addUser(values: z.infer<typeof formSchema>) {
+    const cookieStore = cookies()
+    const supabase = createClient(cookieStore)
+
     const validatedFields = formSchema.safeParse(values)
 
     if (!validatedFields.success) {
         return { success: false, message: "Invalid data provided." }
     }
     
-    const { email } = validatedFields.data;
+    const { name, email, role } = validatedFields.data;
 
-    // This is a mock implementation to bypass the connection timeout issue.
-    console.log("Mock user invitation sent to:", email);
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user || user.user_metadata?.role !== 'Admin') {
+        return { success: false, message: "Unauthorized action." }
+    }
     
-    // In a real implementation, you would add the user to the `users` array in `lib/data.ts`
-    // or similar, and revalidate the path. For now, we just show a success message.
-    
+    // The admin client is required to invite users.
+    const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
+        data: {
+            name: name,
+            role: role,
+        }
+    })
+
+    if (error) {
+        console.error('Supabase invite error:', error)
+        return { success: false, message: error.message }
+    }
+
     return { success: true, message: `Invitation sent to ${email}.` }
 }

@@ -1,5 +1,7 @@
 'use server'
 
+import { createClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
 import { z } from 'zod'
 import { redirect } from 'next/navigation'
 
@@ -9,14 +11,32 @@ const loginFormSchema = z.object({
 })
 
 export async function login(values: z.infer<typeof loginFormSchema>) {
-  // This is a mock implementation to bypass the connection timeout issue.
-  // It allows UI development to continue while network issues are resolved.
-  console.log("Mock login successful for:", values.email);
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+
+  const { email, password } = values;
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+
+  if (error) {
+    console.error('Supabase login error response:', error)
+    return { error: error.message }
+  }
+
   redirect('/dashboard')
 }
 
 export async function logout() {
-  // This is a mock implementation to bypass the connection timeout issue.
-  console.log("Mock logout successful.");
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+  const { error } = await supabase.auth.signOut()
+
+  if (error) {
+    console.error('Supabase logout error:', error)
+  }
+
   redirect('/login')
 }

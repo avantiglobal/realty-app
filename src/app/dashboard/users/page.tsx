@@ -1,4 +1,6 @@
 import Link from "next/link"
+import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 import {
   Table,
   TableBody,
@@ -17,14 +19,55 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { users } from "@/lib/data" // Import mock data
 import type { User } from "@/lib/types"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
 
-// This page now uses mock data to bypass the Supabase connection issue.
-// The original server component logic is commented out below for reference.
-export default function UsersPage() {
+async function getUsers(supabase: ReturnType<typeof createClient>) {
+  // Using the admin client to fetch all users is the correct and secure way
+  // to do this from a server component.
+  const { data: { users }, error } = await supabase.auth.admin.listUsers()
+  if (error) {
+    throw error
+  }
+  return users
+}
+
+export default async function UsersPage() {
+    const cookieStore = cookies()
+    const supabase = createClient(cookieStore)
+    let users: any[] = []
+    let fetchError: string | null = null
+
+    try {
+        console.log("✅ Verifying environment variables...");
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+          throw new Error("Missing Supabase environment variables.");
+        }
+        console.log("✅ Supabase environment variables verified.");
+
+        console.log("... Initializing Supabase client ...");
+        // The client is already initialized above
+        console.log("✅ Supabase client initialized.");
+
+        console.log("... Attempting to fetch users from Supabase ...");
+        const fetchedUsers = await getUsers(supabase);
+        console.log("✅ Successfully fetched users from Supabase.");
+
+        users = fetchedUsers.map(user => ({
+            id: user.id,
+            name: user.user_metadata?.name ?? 'No name',
+            email: user.email,
+            avatar_url: user.user_metadata?.avatar_url,
+            role: user.user_metadata?.role ?? 'User',
+        }));
+    } catch (error: any) {
+        // Log the full error for debugging on the server
+        console.error("❌ CONNECTION FAILED:", error);
+        // Set a user-friendly error message to display in the UI
+        fetchError = "Could not fetch users. Please check your terminal console for detailed error messages and verify your connection and environment variables.";
+    }
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
@@ -37,13 +80,15 @@ export default function UsersPage() {
                 </Link>
             </div>
             
-             <Alert variant="destructive">
+            {fetchError && (
+              <Alert variant="destructive">
                 <Terminal className="h-4 w-4" />
-                <AlertTitle>Modo de Demostración</AlertTitle>
+                <AlertTitle>Connection Error</AlertTitle>
                 <AlertDescription>
-                  La aplicación está usando datos de prueba debido a un problema de conexión con la base de datos. La funcionalidad de Supabase está desactivada temporalmente.
+                  {fetchError}
                 </AlertDescription>
               </Alert>
+            )}
 
           <Card>
               <CardHeader>
@@ -80,13 +125,13 @@ export default function UsersPage() {
                                 </TableCell>
                             </TableRow>
                             ))
-                          ) : (
+                          ) : !fetchError ? (
                             <TableRow>
                               <TableCell colSpan={3} className="h-24 text-center">
                                 No users found.
                               </TableCell>
                             </TableRow>
-                          )}
+                          ) : null}
                       </TableBody>
                   </Table>
               </CardContent>
