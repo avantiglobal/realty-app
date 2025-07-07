@@ -22,6 +22,8 @@ import type { User } from "@/lib/types"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { createClient as createAdminClient } from "@supabase/supabase-js"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Terminal } from "lucide-react"
 
 export default async function UsersPage() {
     const cookieStore = cookies()
@@ -66,7 +68,18 @@ export default async function UsersPage() {
 
     } catch (error: any) {
         console.error("❌ Error fetching users:", error);
-        fetchError = "Could not fetch users. Please check your RLS policies and network connection.";
+        fetchError = "Could not fetch the full user list due to a connection error. Only the current user is being displayed.";
+    }
+
+    if (fetchError) {
+        // Fallback to showing only the current authenticated user.
+        users = [{
+            id: authUser.id,
+            name: authUser.user_metadata.name ?? 'Current User',
+            email: authUser.email ?? 'No email',
+            avatar_url: authUser.user_metadata.avatar_url ?? null,
+            role: authUser.user_metadata.role ?? 'User',
+        }]
     }
 
     return (
@@ -80,6 +93,17 @@ export default async function UsersPage() {
                     <Button>Add User</Button>
                 </Link>
             </div>
+            
+            {fetchError && (
+              <Alert variant="destructive">
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>Connection Issue</AlertTitle>
+                <AlertDescription>
+                  {fetchError}
+                </AlertDescription>
+              </Alert>
+            )}
+
           <Card>
               <CardHeader>
                   <CardTitle>All Users</CardTitle>
@@ -95,13 +119,7 @@ export default async function UsersPage() {
                           </TableRow>
                       </TableHeader>
                       <TableBody>
-                          {fetchError ? (
-                            <TableRow>
-                              <TableCell colSpan={3} className="h-24 text-center text-destructive">
-                                {fetchError}
-                              </TableCell>
-                            </TableRow>
-                          ) : users && users.length > 0 ? (
+                          {users && users.length > 0 ? (
                             users.map((user) => (
                             <TableRow key={user.id}>
                                 <TableCell>
