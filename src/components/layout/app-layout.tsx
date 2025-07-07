@@ -27,7 +27,6 @@ import {
   SidebarInset,
 } from "@/components/ui/sidebar"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { UserNav } from "@/components/user-nav"
 import { Button } from "@/components/ui/button"
 import { NotificationsNav } from "@/components/notifications-nav"
 
@@ -64,7 +63,7 @@ const menuItems = [
   },
 ]
 
-export function AppLayout({ children }: { children: React.ReactNode }) {
+export function AppLayout({ children, userNav }: { children: React.ReactNode, userNav: React.ReactNode }) {
   const pathname = usePathname()
   const allMenuItems = menuItems
 
@@ -121,7 +120,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="ml-auto flex items-center gap-2">
                 <NotificationsNav />
                 <ThemeToggle />
-                <UserNav />
+                {userNav}
             </div>
         </header>
         <main className="flex-1 overflow-auto p-4 sm:px-6">
