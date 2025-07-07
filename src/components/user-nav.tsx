@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 
 import {
@@ -22,7 +22,17 @@ import type { User } from "@/lib/types"
 
 export async function UserNav() {
   const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+      },
+    }
+  )
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {

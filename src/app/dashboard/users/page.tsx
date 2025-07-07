@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { cookies } from 'next/headers'
-import { createClient } from '@/lib/supabase/server'
+import { createServerClient } from '@supabase/ssr'
 import {
   Table,
   TableBody,
@@ -23,7 +23,7 @@ import type { User } from "@/lib/types"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
 
-async function getUsers(supabase: ReturnType<typeof createClient>) {
+async function getUsers(supabase: ReturnType<typeof createServerClient>) {
   // Using the admin client to fetch all users is the correct and secure way
   // to do this from a server component.
   const { data: { users }, error } = await supabase.auth.admin.listUsers()
@@ -35,7 +35,17 @@ async function getUsers(supabase: ReturnType<typeof createClient>) {
 
 export default async function UsersPage() {
     const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          cookies: {
+            get(name: string) {
+              return cookieStore.get(name)?.value
+            },
+          },
+        }
+    )
     let users: any[] = []
     let fetchError: string | null = null
 
