@@ -1,11 +1,15 @@
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { updateSession } from '@/lib/supabase/middleware'
-import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
-  // This will refresh the session if expired.
-  const response = await updateSession(request)
+  // El objeto de respuesta saliente se crea una vez y se puede modificar antes de ser devuelto.
+  const response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
 
+  // Crea un cliente de Supabase configurado para usar cookies.
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -14,11 +18,26 @@ export async function middleware(request: NextRequest) {
         get(name: string) {
           return request.cookies.get(name)?.value
         },
+        set(name: string, value: string, options: CookieOptions) {
+          // Las cookies de la solicitud se actualizan para que estén disponibles para los Server Components.
+          request.cookies.set({ name, value, ...options })
+          // Las cookies de la respuesta se actualizan para ser enviadas al navegador.
+          response.cookies.set({ name, value, ...options })
+        },
+        remove(name: string, options: CookieOptions) {
+          // Las cookies de la solicitud se actualizan para que estén disponibles para los Server Components.
+          request.cookies.set({ name, value: '', ...options })
+          // Las cookies de la respuesta se actualizan para ser enviadas al navegador.
+          response.cookies.set({ name, value: '', ...options })
+        },
       },
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  // Esto refrescará la sesión si ha expirado y actualizará las cookies.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
 
@@ -30,6 +49,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
+  // Devuelve la respuesta con las cookies actualizadas.
   return response
 }
 
