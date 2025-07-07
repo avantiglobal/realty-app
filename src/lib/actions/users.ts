@@ -2,7 +2,7 @@
 
 import { z } from "zod"
 import { cookies } from "next/headers"
-import { createClient as createServerClient } from "@/lib/supabase/server"
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { createClient as createAdminClient } from "@supabase/supabase-js"
 
 const formSchema = z.object({
@@ -21,7 +21,23 @@ export async function addUser(values: z.infer<typeof formSchema>) {
 
     const { name, email, role } = validatedFields.data
     
-    const supabase = createServerClient(cookieStore)
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          cookies: {
+            get(name: string) {
+              return cookieStore.get(name)?.value
+            },
+            set(name: string, value: string, options: CookieOptions) {
+              cookieStore.set({ name, value, ...options })
+            },
+            remove(name: string, options: CookieOptions) {
+              cookieStore.set({ name, value: '', ...options })
+            },
+          },
+        }
+      )
 
     const { data: { user } } = await supabase.auth.getUser()
 
@@ -29,8 +45,6 @@ export async function addUser(values: z.infer<typeof formSchema>) {
         return { success: false, message: "Authentication required." }
     }
 
-    // Check the user's role from their metadata to authorize the action.
-    // This avoids an extra database call to the 'users' table.
     if (user.user_metadata?.role !== 'Admin') {
         return { success: false, message: "Unauthorized. You must be an admin to add users." }
     }
@@ -59,7 +73,6 @@ export async function addUser(values: z.infer<typeof formSchema>) {
 
     if (inviteError) {
         console.error("Supabase invite user error response:", inviteError)
-        // Provide a more user-friendly error message for common cases
         if (inviteError.message.includes('unique constraint')) {
              return { success: false, message: `A user with email ${email} already exists.` }
         }
