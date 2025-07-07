@@ -27,7 +27,7 @@ export async function login(values: z.infer<typeof loginFormSchema>) {
   })
 
   if (error) {
-    console.error("Login failed:", error);
+    console.error("Supabase login error response:", error)
     return { error: error.message }
   }
 
@@ -41,7 +41,7 @@ export async function logout() {
   const { error } = await supabase.auth.signOut()
 
   if (error) {
-    console.error("Error logging out:", error)
+    console.error("Supabase logout error response:", error)
   }
 
   return redirect('/login')

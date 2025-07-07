@@ -58,7 +58,7 @@ export async function addUser(values: z.infer<typeof formSchema>) {
     )
 
     if (inviteError) {
-        console.error("Error inviting user:", inviteError)
+        console.error("Supabase invite user error response:", inviteError)
         // Provide a more user-friendly error message for common cases
         if (inviteError.message.includes('unique constraint')) {
              return { success: false, message: `A user with email ${email} already exists.` }

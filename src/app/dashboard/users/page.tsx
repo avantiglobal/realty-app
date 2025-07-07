@@ -67,7 +67,7 @@ export default async function UsersPage() {
         }));
 
     } catch (error: any) {
-        console.error("❌ Error fetching users:", error);
+        console.error("Supabase fetch users error response:", error);
         fetchError = `Could not fetch user list: ${error.message}. Only the current user is being displayed as a fallback.`;
     }
 
