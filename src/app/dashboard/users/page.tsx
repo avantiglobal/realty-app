@@ -65,7 +65,7 @@ export default async function UsersPage() {
         }));
 
     } catch (error: any) {
-        console.error("❌ Error fetching users:", error.message);
+        console.error("❌ Error fetching users:", error);
         fetchError = "Could not fetch users. Please check your RLS policies and network connection.";
     }
 
