@@ -26,36 +26,49 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
 
 export default async function UsersPage() {
+    console.log("--- Loading Users Page ---");
     const cookieStore = cookies()
     const supabase = createClient(cookieStore)
 
     const { data: { user: authUser } } = await supabase.auth.getUser()
     if (!authUser) {
+        console.log("No authenticated user, redirecting to /login");
         redirect('/login')
     }
+    console.log(`Authenticated as ${authUser.email}`);
+
 
     let users: User[] | null = null;
     let fetchError: string | null = null;
     
     try {
+        console.log("Attempting to connect to Supabase to fetch user list...");
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
         if (!supabaseUrl || !supabaseServiceRoleKey) {
+            console.error("❌ Critical Error: Supabase URL or Service Role Key is missing in environment variables.");
             throw new Error("Server configuration error: Supabase keys not set.");
         }
+        console.log("✅ Supabase environment variables found.");
         
         const supabaseAdmin = createAdminClient(
             supabaseUrl,
             supabaseServiceRoleKey,
             { auth: { autoRefreshToken: false, persistSession: false } }
         );
+        console.log("✅ Supabase admin client initialized.");
 
+        console.log("Fetching user list from Supabase...");
         const { data: { users: authUsers }, error } = await supabaseAdmin.auth.admin.listUsers();
         
         if (error) {
+            console.error("❌ Error response from Supabase while fetching users:");
+            console.error(error); // Log the full error object
             throw error;
         }
+
+        console.log(`✅ Successfully fetched ${authUsers.length} user(s) from Supabase.`);
         
         // Map the Supabase Auth users to our application's User type
         users = authUsers.map(user => ({
@@ -67,8 +80,9 @@ export default async function UsersPage() {
         }));
 
     } catch (error: any) {
-        console.error("Supabase fetch users error response:", error);
-        fetchError = `Could not fetch user list: ${error.message}. Only the current user is being displayed as a fallback.`;
+        console.error("❌ An error occurred in the try-catch block while fetching users.");
+        console.error("Full error object:", error);
+        fetchError = `Could not fetch user list: ${error.message}. See server console for details.`;
     }
 
     if (fetchError && !users) {
