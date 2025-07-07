@@ -68,11 +68,11 @@ export default async function UsersPage() {
 
     } catch (error: any) {
         console.error("❌ Error fetching users:", error);
-        fetchError = "Could not fetch the full user list due to a connection error. Only the current user is being displayed.";
+        fetchError = `Could not fetch user list: ${error.message}. Only the current user is being displayed as a fallback.`;
     }
 
-    if (fetchError) {
-        // Fallback to showing only the current authenticated user.
+    if (fetchError && !users) {
+        // Fallback to showing only the current authenticated user if the fetch failed.
         users = [{
             id: authUser.id,
             name: authUser.user_metadata.name ?? 'Current User',

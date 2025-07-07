@@ -28,7 +28,7 @@ export async function login(values: z.infer<typeof loginFormSchema>) {
 
   if (error) {
     console.error("Login failed:", error);
-    return { error: `Login attempt failed: ${error.message}. Please check the server console for the full error details.` }
+    return { error: error.message }
   }
 
   return redirect('/dashboard')
