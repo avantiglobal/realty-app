@@ -11,6 +11,10 @@ const loginFormSchema = z.object({
 })
 
 export async function login(values: z.infer<typeof loginFormSchema>) {
+  if (process.env.FB_DEV === 'true') {
+    return redirect('/dashboard');
+  }
+
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
 
@@ -23,13 +27,19 @@ export async function login(values: z.infer<typeof loginFormSchema>) {
 
   if (error) {
     console.error('Supabase login error response:', error)
-    return { error: error.message }
+    // Redirecting with an error message in the URL is not ideal,
+    // but it was the state before the last change.
+    return redirect(`/login?message=${error.message}`)
   }
 
   redirect('/dashboard')
 }
 
 export async function logout() {
+  if (process.env.FB_DEV === 'true') {
+    return redirect('/login');
+  }
+
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
   const { error } = await supabase.auth.signOut()

@@ -9,6 +9,11 @@ export async function middleware(request: NextRequest) {
     },
   })
 
+  // Bypass Supabase auth for local development
+  if (process.env.FB_DEV === 'true') {
+    return response
+  }
+
   // Crea un cliente de Supabase configurado para usar cookies.
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

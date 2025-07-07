@@ -42,14 +42,9 @@ export default function LoginPage() {
   })
 
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
-    const result = await login(values)
-    if (result?.error) {
-        toast({
-            title: "Login Failed",
-            description: result.error,
-            variant: "destructive",
-        })
-    }
+    // The server action 'login' is expected to handle the redirect.
+    // Error handling via toast is removed as the action will redirect on error too.
+    await login(values)
   }
 
   return (

@@ -11,6 +11,10 @@ const formSchema = z.object({
 })
 
 export async function addUser(values: z.infer<typeof formSchema>) {
+    if (process.env.FB_DEV === 'true') {
+      return { success: true, message: `DEV MODE: Invitation sent to ${values.email}.` };
+    }
+
     const cookieStore = cookies()
     const supabase = createClient(cookieStore)
 

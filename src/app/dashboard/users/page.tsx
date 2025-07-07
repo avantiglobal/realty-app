@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { User } from "@/lib/types"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
+import { users as mockUsers } from "@/lib/data"
 
 async function getUsers(supabase: ReturnType<typeof createServerClient>) {
   // Using the admin client to fetch all users is the correct and secure way
@@ -34,48 +35,54 @@ async function getUsers(supabase: ReturnType<typeof createServerClient>) {
 }
 
 export default async function UsersPage() {
-    const cookieStore = cookies()
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-          cookies: {
-            get(name: string) {
-              return cookieStore.get(name)?.value
-            },
-          },
-        }
-    )
     let users: any[] = []
     let fetchError: string | null = null
 
-    try {
-        console.log("✅ Verifying environment variables...");
-        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-          throw new Error("Missing Supabase environment variables.");
+    if (process.env.FB_DEV === 'true') {
+        console.log("✅ Running in FB_DEV mode. Using mock user data.");
+        users = mockUsers;
+    } else {
+        const cookieStore = cookies()
+        const supabase = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+              cookies: {
+                get(name: string) {
+                  return cookieStore.get(name)?.value
+                },
+              },
+            }
+        )
+        
+        try {
+            console.log("✅ Verifying environment variables...");
+            if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+              throw new Error("Missing Supabase environment variables.");
+            }
+            console.log("✅ Supabase environment variables verified.");
+
+            console.log("... Initializing Supabase client ...");
+            // The client is already initialized above
+            console.log("✅ Supabase client initialized.");
+
+            console.log("... Attempting to fetch users from Supabase ...");
+            const fetchedUsers = await getUsers(supabase);
+            console.log("✅ Successfully fetched users from Supabase.");
+
+            users = fetchedUsers.map(user => ({
+                id: user.id,
+                name: user.user_metadata?.name ?? 'No name',
+                email: user.email,
+                avatar_url: user.user_metadata?.avatar_url,
+                role: user.user_metadata?.role ?? 'User',
+            }));
+        } catch (error: any) {
+            // Log the full error for debugging on the server
+            console.error("❌ CONNECTION FAILED:", error);
+            // Set a user-friendly error message to display in the UI
+            fetchError = "Could not fetch users. Please check your terminal console for detailed error messages and verify your connection and environment variables.";
         }
-        console.log("✅ Supabase environment variables verified.");
-
-        console.log("... Initializing Supabase client ...");
-        // The client is already initialized above
-        console.log("✅ Supabase client initialized.");
-
-        console.log("... Attempting to fetch users from Supabase ...");
-        const fetchedUsers = await getUsers(supabase);
-        console.log("✅ Successfully fetched users from Supabase.");
-
-        users = fetchedUsers.map(user => ({
-            id: user.id,
-            name: user.user_metadata?.name ?? 'No name',
-            email: user.email,
-            avatar_url: user.user_metadata?.avatar_url,
-            role: user.user_metadata?.role ?? 'User',
-        }));
-    } catch (error: any) {
-        // Log the full error for debugging on the server
-        console.error("❌ CONNECTION FAILED:", error);
-        // Set a user-friendly error message to display in the UI
-        fetchError = "Could not fetch users. Please check your terminal console for detailed error messages and verify your connection and environment variables.";
     }
 
     return (
